@@ -12,11 +12,22 @@ def get_directions(html_content):
     directions = {}
     soup = BeautifulSoup(html_content, 'html.parser')
     direction_results = soup.find(id="mm-recipes-steps_1-0")
-    direction_p = direction_results.find_all('p')
-    for step in direction_p:
-        print(step.text)
+    direction_ol = direction_results.find("ol")
+    direction_li = direction_ol.find_all("li")
+    
+    for i in range(len(direction_li)):
+        p = direction_li[i].find("p")
+        real_step = i + 1
+        step_text = "Step " + str(real_step)
+        step_direction = p.text.strip()
+        directions[step_text] = step_direction
+    
+    return directions
+
+def get_cooks_note():
+    return None
 
 # recipe_url = "https://www.allrecipes.com/recipe/8462067/spinach-artichoke-garlic-naan-pizza"
 recipe_url = "https://www.allrecipes.com/chicken-carbonara-pasta-bake-recipe-7969899"
 recipe_html = fetch_recipe_page(recipe_url)
-get_directions(recipe_html)
+print(get_directions(recipe_html))
