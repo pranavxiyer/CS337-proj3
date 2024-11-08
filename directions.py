@@ -28,6 +28,6 @@ def get_cooks_note():
     return None
 
 # recipe_url = "https://www.allrecipes.com/recipe/8462067/spinach-artichoke-garlic-naan-pizza"
-recipe_url = "https://www.allrecipes.com/chicken-carbonara-pasta-bake-recipe-7969899"
-recipe_html = fetch_recipe_page(recipe_url)
-print(get_directions(recipe_html))
+# recipe_url = "https://www.allrecipes.com/chicken-carbonara-pasta-bake-recipe-7969899"
+# recipe_html = fetch_recipe_page(recipe_url)
+# print(get_directions(recipe_html))
