@@ -11,29 +11,27 @@ def parse_recipe(html_content):
     soup = BeautifulSoup(html_content, 'html.parser')
     # print(soup.title.string)
     # print(len(soup.find_all('p')))
+    ingredients = []
+    directions = []
     for text in soup.find_all('p'):
         if not (text.string):
-            print(text)
-            
-            print(text.span.string)
+            ing = {}
+            # print(text)
+            # print(text.span.string)
+            for spanner in text.find_all('span'):
+                if spanner.has_attr("data-ingredient-quantity"):
+                    ing["amount"] = spanner.text
+                elif spanner.has_attr("data-ingredient-unit"):
+                    ing["unit"] = spanner.text
+                elif spanner.has_attr("data-ingredient-name"):
+                    ing["name"] = spanner.text
+            ingredients.append(ing)
+        else:
+            directions
 
-    # Extracting ingredients
-    ingredients = []
-    for ingredient in soup.select('.recipe-ingred_txt'):
-        ingredient_text = ingredient.get_text()
-        ingredients.append(ingredient_text)
 
-    # Extracting directions
-    directions = []
-    for direction in soup.select('.recipe-directions__list--item'):
-        direction_text = direction.get_text()
-        directions.append(direction_text)
-
-    # Extracting tools and methods (optional)
     tools = []
     methods = []
-    # This part will depend on the specific HTML structure of the website
-    # and might require more sophisticated parsing logic.
 
     return {
         'ingredients': ingredients,
@@ -43,9 +41,9 @@ def parse_recipe(html_content):
     }
 
 # Example usage
-url = "https://www.allrecipes.com/recipe/246481/slow-cooked-red-braised-pork-belly/"
+url = "https://www.allrecipes.com/recipe/7011/chinese-steamed-buns/"
 html_content = fetch_recipe_page(url)
 
 # Example usage
 recipe_data = parse_recipe(html_content)
-# print(html_content)
+print(recipe_data)
