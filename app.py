@@ -14,7 +14,7 @@ def handle_dm_messages(event, say):
     if event.get("channel_type") == "im":
         user_message = event.get("text")
         say(text=user_message)
-        say(text="test auto deploy")
+        say(text="test auto deploy again!")
 
 if __name__ == "__main__":
     app.start(port=int(os.environ.get("PORT", 3000)))
