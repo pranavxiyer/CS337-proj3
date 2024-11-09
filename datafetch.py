@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 from directions import get_directions, fetch_recipe_page 
+from toolfinding import extract_tools
 
 def get_ingredients(html_content):
     soup = BeautifulSoup(html_content, 'html.parser')
@@ -45,10 +46,12 @@ def get_ingredients(html_content):
 def parse_recipe(html_content):
     tools = []
     methods = []
+    directions = get_directions(html_content)
+    # print(list(directions.values()))
     return {
         'ingredients': get_ingredients(html_content),
-        'directions': get_directions(html_content),
-        'tools': tools,
+        'directions': directions,
+        'tools': extract_tools(list(directions.values())),
         'methods': methods
     }
 
