@@ -55,7 +55,7 @@ def conversational_interface(recipe_data):
 
         elif user_input == "how do i do that":
             # This requires conversation history to infer what "that" refers to.
-            
+            pass
 
         elif user_input == "exit":
             break
