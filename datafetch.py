@@ -55,11 +55,14 @@ def parse_recipe(html_content):
         'methods': methods
     }
 
-# Example usage
-url = "https://www.allrecipes.com/recipe/7011/chinese-steamed-buns/"
-# url = "https://www.seriouseats.com/baked-french-toast-casserole-recipe-8740716"
-html_content = fetch_recipe_page(url)
 
-# Example usage
-recipe_data = parse_recipe(html_content)
-print(recipe_data)
+if __name__ == "__main__":
+
+    # Example usage
+    url = "https://www.allrecipes.com/recipe/7011/chinese-steamed-buns/"
+    # url = "https://www.seriouseats.com/baked-french-toast-casserole-recipe-8740716"
+    html_content = fetch_recipe_page(url)
+
+    # Example usage
+    recipe_data = parse_recipe(html_content)
+    print(recipe_data)
