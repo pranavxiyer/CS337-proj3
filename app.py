@@ -85,12 +85,12 @@ def handle_dm_messages(event, say):
         
         elif "how much" in user_message:
             ingredient_name = user_message.split("how much of ")[-1]
-            for ingredient in parsed_recipe['ingredients']:
+            for ingredient in user_sessions.get(user_id)['ingredients']:
                 if ingredient_name in ingredient["name"]:
                     amt = ingredient['amount']
                     unit = ingredient['unit']
                     ingr_name = ingredient['name']
-                    current_step = steps['Step ' + str(user_sessions.get(user_id)["current_step"])]
+                    current_step = user_sessions.get(user_id)['steps']['Step ' + str(user_sessions.get(user_id)["current_step"])]
                     if ingredient_name in current_step:
                         ing_words = ingredient_name.split()
                         step_words = current_step.split()
