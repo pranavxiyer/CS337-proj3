@@ -10,10 +10,6 @@ from rapidfuzz import fuzz
 spacy_model = spacy.load("en_core_web_lg")
 cooking_class = verbnet.vnclass('cooking-45.3')
 method_verbs = [member.get("name") for member in cooking_class.findall("MEMBERS/MEMBER")]
-# print(method_verbs)
-# print(fuzz.ratio("saute", "sautee"))
-
-# print(method_verbs)
 
 # methods = ["poach", "deep fry", "shallow fry", "steam", "sautee", "bast", "boil", "blanch", "broil", "stew", 
 #            "grill", "bake", "barbeque", "ovenroast", "braise", "pressure cook", "skillet cook"]
