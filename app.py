@@ -61,6 +61,7 @@ def handle_dm_messages(event, say):
                 say(text="Here are the ingredients:\n" + "\n".join(formatted_ingredients))
             else:
                 say(text="Please provide a recipe URL first.")
+            
         
         elif "list" in user_message and "tools" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
@@ -80,6 +81,38 @@ def handle_dm_messages(event, say):
 
         elif ("previous" in user_message or "back" in user_message) and "step" in user_message:
             say(text=get_step(user_id, -1))
+
+        
+        elif "how much" in user_message:
+            ingredient_name = user_message.split("how much of ")[-1]
+            for ingredient in parsed_recipe['ingredients']:
+                if ingredient_name in ingredient["name"]:
+                    amt = ingredient['amount']
+                    unit = ingredient['unit']
+                    ingr_name = ingredient['name']
+                    current_step = steps['Step ' + str(user_sessions.get(user_id)["current_step"])]
+                    if ingredient_name in current_step:
+                        ing_words = ingredient_name.split()
+                        step_words = current_step.split()
+                        
+                        if ing_words[0] in step_words:
+                            ind = step_words.index(ing_words[0])
+                            inplace = True
+                            for i in range(ing_words):
+                                if step_words[ind + i] != ing_words[i]:
+                                    ind = False
+                                    break
+                            if inplace:
+                                unit2 = step_words[ind - 1]
+                                amount = step_words[ind - 2]
+                                amount_ind = ind - 3
+                                while any(chr.isdigit() for chr in step_words[amount_ind]):
+                                    amount.append(step_words[amount_ind])
+                                    amount_ind -= 1
+                                amount = amount.reverse()
+                                amount = " ".join(amount)    
+                                print(f"For this step specifically, you need {amt} {unit2} of {ingr_name}")
+                    print(f"You need: {amt} {unit} of {ingr_name}")
 
         elif user_message.startswith("go to step "):
             step = int(user_message.split()[-1])
