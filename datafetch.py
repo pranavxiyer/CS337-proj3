@@ -74,7 +74,7 @@ if __name__ == "__main__":
         if ingredient_name in ingredient["name"]:
             amt = ingredient['amount']
             unit = ingredient['unit']
-            name = ingredient['name']
+            ingr_name = ingredient['name']
             
-            print(f"You need: {amt} {unit} of {name}")
+            print(f"You need: {amt} {unit} of {ingr_name}")
 
