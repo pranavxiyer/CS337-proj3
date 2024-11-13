@@ -1,57 +1,47 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-from directions import get_directions, fetch_recipe_page 
+from directions import get_directions, fetch_recipe_page, get_methods_spacy
 from toolfinding import extract_tools
+from unicodedata import*
+
+
+def clean_text(s):
+    return normalize('NFKC',s).replace(*'⁄/')
+    
 
 def get_ingredients(html_content):
     soup = BeautifulSoup(html_content, 'html.parser')
-    # print(soup.title.string)
-    # print(len(soup.find_all('p')))
     ingredients = []
     directions = []
-    # Define a function to check if 'options' is in the class attribute
     def has_options_class(tag):
         return tag.name == 'ul' and 'ingredients' in tag.get('class', [])
 
-    # Use the find method with the custom function
     ingListText = soup.find(name='ul', class_=re.compile('ingredients'))
-    # print(ingListText)
-
-
-    # ingListText = soup.find_all('ul')[0]
-    # # ulists = 
-    # for ulist in soup.find_all('ul'):
-    #     if not ulist.has_attr('class'):
-    #         continue
-    #     elif 'ingredients' in ulist['class'][0]:
-    #         ingListText = ulist
-    #         break
-    # print(ingListText)
+    
     for text in ingListText.find_all('p'):
         ing = {}
-        # print(text)
-        # print(text.span.string)
         for spanner in text.find_all('span'):
             if spanner.has_attr("data-ingredient-quantity"):
-                ing["amount"] = spanner.text
+                ing["amount"] = clean_text(spanner.text)
             elif spanner.has_attr("data-ingredient-unit"):
-                ing["unit"] = spanner.text
+                ing["unit"] = clean_text(spanner.text)
             elif spanner.has_attr("data-ingredient-name"):
-                ing["name"] = spanner.text
+                ing["name"] = clean_text(spanner.text)
         ingredients.append(ing)
 
     return ingredients
 
 def parse_recipe(html_content):
-    tools = []
-    methods = []
+    ingredients = get_ingredients(html_content)
     directions = get_directions(html_content)
-    # print(list(directions.values()))
+    tools = extract_tools(list(directions.values()))
+    methods = get_methods_spacy(directions)
+    print(list(directions.values()))
     return {
-        'ingredients': get_ingredients(html_content),
+        'ingredients': ingredients,
         'directions': directions,
-        'tools': extract_tools(list(directions.values())),
+        'tools': tools,
         'methods': methods
     }
 
@@ -59,10 +49,32 @@ def parse_recipe(html_content):
 if __name__ == "__main__":
 
     # Example usage
-    url = "https://www.allrecipes.com/recipe/7011/chinese-steamed-buns/"
+    url = "https://www.allrecipes.com/ecipe/7011/chinese-steamed-buns/"
     # url = "https://www.seriouseats.com/baked-french-toast-casserole-recipe-8740716"
     html_content = fetch_recipe_page(url)
 
     # Example usage
     recipe_data = parse_recipe(html_content)
     print(recipe_data)
+    # print()
+    # cleaner = lambda s:normalize('NFKC',s).replace(*'⁄/')
+        
+
+    # for ingredient in recipe_data['ingredients']:
+    #     if ing in ingredient["name"]:
+    #         print(f"You need: {ingredient}")
+
+    # print(recipe_data["ingredients"][0]["name"])
+    
+    
+    ing = "brioche"
+
+    ingredient_name = ing
+    for ingredient in recipe_data['ingredients']:
+        if ingredient_name in ingredient["name"]:
+            amt = ingredient['amount']
+            unit = ingredient['unit']
+            name = ingredient['name']
+            
+            print(f"You need: {amt} {unit} of {name}")
+

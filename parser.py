@@ -39,8 +39,12 @@ def conversational_interface(recipe_data):
         elif user_input.startswith("how much of"):
             ingredient_name = user_input.split("how much of ")[-1]
             for ingredient in recipe_data['ingredients']:
-                if ingredient_name in ingredient.lower():
-                    print(f"You need: {ingredient}")
+                if ingredient_name in ingredient["name"]:
+                    amt = ingredient['amount']
+                    unit = ingredient['unit']
+                    name = ingredient['name']
+                    
+                    print(f"You need: {amt} {unit} of {name}")
                     break
             else:
                 print(f"{ingredient_name} is not in the ingredients list.")
