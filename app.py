@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from directions import fetch_recipe_page 
 from datafetch import parse_recipe
 import os
+import string
 
 # https://cs337-proj2.onrender.com/slack/events
 
@@ -94,25 +95,27 @@ def handle_dm_messages(event, say):
                     if ingredient_name in current_step:
                         ing_words = ingredient_name.split()
                         step_words = current_step.split()
+
+                        punctuation_without_slash = string.punctuation.replace("/", "")
+                        translation_table = str.maketrans('', '', punctuation_without_slash)
+                        step_words = [word.translate(translation_table) for word in step_words]
                         
                         if ing_words[0] in step_words:
+                            print("hello")
                             ind = step_words.index(ing_words[0])
                             inplace = True
-                            for i in range(ing_words):
-                                if step_words[ind + i] != ing_words[i]:
-                                    ind = False
-                                    break
+                            # for i in range(ing_words):
+                            #     if step_words[ind + i] != ing_words[i]:
+                            #         inplace = False
                             if inplace:
                                 unit2 = step_words[ind - 1]
                                 amount = step_words[ind - 2]
                                 amount_ind = ind - 3
-                                while any(chr.isdigit() for chr in step_words[amount_ind]):
-                                    amount.append(step_words[amount_ind])
+                                while step_words[amount_ind].isdigit():
+                                    amount = step_words[amount_ind] + " " + amount
                                     amount_ind -= 1
-                                amount = amount.reverse()
-                                amount = " ".join(amount)    
-                                print(f"For this step specifically, you need {amt} {unit2} of {ingr_name}")
-                    print(f"You need: {amt} {unit} of {ingr_name}")
+                                say(text=f"For this step specifically, you need {amount} {unit2} of {ingr_name}.")
+                    say(text=f"You need: {amt} {unit} of {ingr_name} for the whole recipe.")
 
         elif user_message.startswith("go to step "):
             step = int(user_message.split()[-1])
