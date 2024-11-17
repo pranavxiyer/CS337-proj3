@@ -24,9 +24,10 @@ def get_step(user_id, delta):
         if step_number in steps:
             return f"{step_number}: {steps[step_number]}"
         else:
+            user_sessions[user_id]["current_step"] -= delta
             return "No more steps."
     else:
-        return "Please provide a recipe URL first."
+        return "Please provide a AllRecipes URL first."
 
 @app.event("message")
 def handle_dm_messages(event, say):
@@ -49,11 +50,11 @@ def handle_dm_messages(event, say):
                 }
 
             say(text="What do you want to do?")
-            say(text="[1] List ingredients")
-            say(text="[2] List tools")
-            say(text="[3] Go over recipe steps")
+            say(text="* List ingredients")
+            say(text="* List tools")
+            say(text="* Go over recipe steps")
         
-        elif "list" in user_message and "ingredients" in user_message:
+        elif "ingredients" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
                 ingredients = user_sessions[user_id].get("ingredients", [])
 
@@ -64,7 +65,7 @@ def handle_dm_messages(event, say):
                 say(text="Please provide a recipe URL first.")
             
         
-        elif "list" in user_message and "tools" in user_message:
+        elif "tools" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
                 tools = user_sessions[user_id].get("tools", [])
                 say(text="Here are the tools:\n" + "\n".join(tools))
@@ -83,9 +84,22 @@ def handle_dm_messages(event, say):
         elif ("previous" in user_message or "back" in user_message) and "step" in user_message:
             say(text=get_step(user_id, -1))
 
+        elif " to step " in user_message:
+            step = int(user_message.split()[-1])
+            if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
+                steps = user_sessions[user_id].get("steps", [])
+                step_number = 'Step ' + str(user_sessions.get(user_id)[step])
+
+                if step_number in steps:
+                    user_sessions[user_id]["current_step"] = step
+                    say(text=f"{step_number}: {steps[step_number]}")
+                else:
+                    say(text=step_number + " does not exist.")
+            else:
+                return say(text="Please provide a AllRecipes URL first.")
         
         elif "how much" in user_message:
-            ingredient_name = user_message.split("how much of ")[-1]
+            ingredient_name = user_message.split("how much ")[-1]
             for ingredient in user_sessions.get(user_id)['ingredients']:
                 if ingredient_name in ingredient["name"]:
                     amt = ingredient['amount']
@@ -101,7 +115,6 @@ def handle_dm_messages(event, say):
                         step_words = [word.translate(translation_table) for word in step_words]
                         
                         if ing_words[0] in step_words:
-                            print("hello")
                             ind = step_words.index(ing_words[0])
                             inplace = True
                             # for i in range(ing_words):
@@ -116,20 +129,6 @@ def handle_dm_messages(event, say):
                                     amount_ind -= 1
                                 say(text=f"For this step specifically, you need {amount} {unit2} of {ingr_name}.")
                     say(text=f"You need: {amt} {unit} of {ingr_name} for the whole recipe.")
-
-        elif user_message.startswith("go to step "):
-            step = int(user_message.split()[-1])
-            if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
-                user_sessions[user_id]["current_step"] = step
-                steps = user_sessions[user_id].get("steps", [])
-                step_number = 'Step ' + str(user_sessions.get(user_id)["current_step"])
-
-                if step_number in steps:
-                    say(text=f"{step_number}: {steps[step_number]}")
-                else:
-                    say(text=step_number + " does not exist.")
-            else:
-                return say(text="Please provide a recipe URL first.")
             
         elif user_message.startswith("what is") or user_message.startswith("how to") or user_message.startswith("how do i"):
             say(text="https://www.google.com/search?q="+'+'.join(user_message.split()))
