@@ -106,22 +106,26 @@ def get_methods_spacy(directions_dictionary):
     # print(f"secondary: {secondary_methods}")
 
     return primary_methods, secondary_methods
+
+def get_first_cooking_verb(sentence):
+    spacy_output = spacy_model(sentence)
+    for token in spacy_output:
+        if token.pos_ == "VERB":
+            return token.text.lower()
+    return None
+
+
     
 
 
 
 # recipe_url = "https://www.allrecipes.com/recipe/8462067/spinach-artichoke-garlic-naan-pizza"
 # recipe_url = "https://www.allrecipes.com/chicken-carbonara-pasta-bake-recipe-7969899"
-# recipe_url = "https://www.seriouseats.com/hong-kong-style-french-toast-recipe-8605272"
-# recipe_html = fetch_recipe_page(recipe_url)
-# directions = get_directions(recipe_html)
-# print(f"directions: {directions}")
-# get_methods_nltk(directions)
-# get_methods_spacy(directions)
 
-## TESTING FOR DIFF WEBSITES
-# recipe_url = "https://www.allrecipes.com/recipe/8462067/spinach-artichoke-garlic-naan-pizza"
-# recipe_url = "https://www.allrecipes.com/chicken-carbonara-pasta-bake-recipe-7969899"
-# recipe_url = "https://www.seriouseats.com/hong-kong-style-french-toast-recipe-8605272"
-# recipe_html = fetch_recipe_page(recipe_url)
-# get_directions2(recipe_html)
+recipe_url = "https://www.allrecipes.com/recipe/7011/chinese-steamed-buns/"
+recipe_html = fetch_recipe_page(recipe_url)
+directions = get_directions(recipe_html)
+# print(f"directions: {directions}")
+# print(get_methods_nltk(directions))
+# print(get_methods_spacy(directions))
+print(get_first_cooking_verb('Knead until dough is smooth and elastic.'))
