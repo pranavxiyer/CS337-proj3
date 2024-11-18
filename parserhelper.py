@@ -20,27 +20,33 @@ def find_ingredients_in_string(ingredients, input_string):
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.tag import pos_tag
+from nltk.corpus import wordnet
 import re
 
 # Download necessary NLTK data files
 # nltk.download('punkt')
 # nltk.download('averaged_perceptron_tagger')
+def get_all_pos_tags(word):
+    pos_tags = set()
+    for synset in wordnet.synsets(word):
+        pos_tags.add(synset.pos())
+    return pos_tags
 
 def answer_cooking_question(step_string, question):
-    match = re.search(r'how long do I (\w+)', question)
+    match = re.search(r'how long do I (.*)', question)
     if not match:
         return "Invalid question format."
 
     content = match.group(1)
 
     tokens = word_tokenize(content)
-    pos_tags = pos_tag(tokens)
-    print(pos_tags)
+    # print(tokens)
     # Find the cooking verb in the question
     cooking_verb = None
-    for word, tag in pos_tags:
-        print(word, tag)
-        if tag.startswith('VB'):  # Verb tags start with 'VB'
+    for word in tokens:
+        # print(word)
+        possible_pos_tags = get_all_pos_tags(word)
+        if 'v'in possible_pos_tags:
             cooking_verb = word
 
     if not cooking_verb:
@@ -51,10 +57,8 @@ def answer_cooking_question(step_string, question):
     if verb_index == -1:
         return "The cooking verb is not found in the step string."
 
-    # Extract the relevant part of the step_string
     relevant_part = step_string[verb_index:]
 
-    # Use regex to find the duration or condition
     duration_match = re.search(r'(until|for).*', relevant_part)
     if duration_match:
         duration = duration_match.group(0)
