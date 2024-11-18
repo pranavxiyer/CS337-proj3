@@ -37,7 +37,7 @@ def parse_recipe(html_content):
     directions = get_directions(html_content)
     tools = extract_tools(list(directions.values()))
     methods = get_methods_spacy(directions)
-    print(list(directions.values()))
+    # print(list(directions.values()))
     return {
         'ingredients': ingredients,
         'directions': directions,
@@ -67,14 +67,14 @@ if __name__ == "__main__":
     # print(recipe_data["ingredients"][0]["name"])
     
     
-    ing = "brioche"
+    # ing = "brioche"
 
-    ingredient_name = ing
-    for ingredient in recipe_data['ingredients']:
-        if ingredient_name in ingredient["name"]:
-            amt = ingredient['amount']
-            unit = ingredient['unit']
-            ingr_name = ingredient['name']
+    # ingredient_name = ing
+    # for ingredient in recipe_data['ingredients']:
+    #     if ingredient_name in ingredient["name"]:
+    #         amt = ingredient['amount']
+    #         unit = ingredient['unit']
+    #         ingr_name = ingredient['name']
             
-            print(f"You need: {amt} {unit} of {ingr_name}")
+    #         print(f"You need: {amt} {unit} of {ingr_name}")
 
