@@ -4,6 +4,7 @@ from directions import fetch_recipe_page
 from datafetch import parse_recipe
 import os
 import string
+import re
 
 # https://cs337-proj2.onrender.com/slack/events
 
@@ -35,7 +36,7 @@ def handle_dm_messages(event, say):
         user_id = event.get("user")
         user_message = str(event.get("text")).lower()
 
-        if "https://www.allrecipes.com" in user_message:
+        if "allrecipes.com" in user_message:
             url = user_message.strip('<>')
             html_content = fetch_recipe_page(url)
             parsed_recipe = parse_recipe(html_content)
@@ -45,6 +46,7 @@ def handle_dm_messages(event, say):
                     "ingredients": parsed_recipe['ingredients'],
                     "tools": parsed_recipe['tools'],
                     "steps": parsed_recipe['directions'],
+                    "methods": parsed_recipe['methods'],
                     "current_step": 0,
                     "last_action": "recipe_selected"
                 }
@@ -62,7 +64,7 @@ def handle_dm_messages(event, say):
 
                 say(text="Here are the ingredients:\n" + "\n".join(formatted_ingredients))
             else:
-                say(text="Please provide a recipe URL first.")
+                say(text="Please provide an AllRecipes URL first.")
             
         
         elif "tools" in user_message:
@@ -70,7 +72,7 @@ def handle_dm_messages(event, say):
                 tools = user_sessions[user_id].get("tools", [])
                 say(text="Here are the tools:\n" + "\n".join(tools))
             else:
-                say(text="Please provide a recipe URL first.")
+                say(text="Please provide an AllRecipes URL first.")
 
         elif "recipe steps" in user_message:
             say(text=get_step(user_id, 1))
@@ -88,7 +90,7 @@ def handle_dm_messages(event, say):
             step = int(user_message.split()[-1])
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
                 steps = user_sessions[user_id].get("steps", [])
-                step_number = 'Step ' + str(user_sessions.get(user_id)[step])
+                step_number = 'Step ' + str(step)
 
                 if step_number in steps:
                     user_sessions[user_id]["current_step"] = step
@@ -96,41 +98,54 @@ def handle_dm_messages(event, say):
                 else:
                     say(text=step_number + " does not exist.")
             else:
-                return say(text="Please provide a AllRecipes URL first.")
+                return say(text="Please provide an AllRecipes URL first.")
         
         elif "how much" in user_message:
-            ingredient_name = user_message.split("how much ")[-1]
-            for ingredient in user_sessions.get(user_id)['ingredients']:
-                if ingredient_name in ingredient["name"]:
-                    amt = ingredient['amount']
-                    unit = ingredient['unit']
-                    ingr_name = ingredient['name']
-                    current_step = user_sessions.get(user_id)['steps']['Step ' + str(user_sessions.get(user_id)["current_step"])]
-                    if ingredient_name in current_step:
-                        ing_words = ingredient_name.split()
-                        step_words = current_step.split()
+            pattern = r"how much\s+([\w\s]+?)(?:\s+(do|should|is))?\b"
+            match = re.search(pattern, user_message)
+            if match:
+                ingr_text = match.group(1)
+                for ingredient in user_sessions.get(user_id)['ingredients']:
+                    if ingr_text in ingredient["name"]:
+                        amt = ingredient['amount']
+                        unit = ingredient['unit']
+                        # ingredient_name = ingredient['name']
+                #         say(text=f"You need: {amt} {unit} of {ingredient_name} for the whole recipe.")
+                current_step = user_sessions.get(user_id)['steps']['Step ' + str(user_sessions.get(user_id)["current_step"])]
+                for part in current_step.split(','):
+                    if ingr_text in part:
+                        search_text = part.split(ingr_text)[0].split()
+                        isDigit = False
+                        i = len(search_text) - 1
 
-                        punctuation_without_slash = string.punctuation.replace("/", "")
-                        translation_table = str.maketrans('', '', punctuation_without_slash)
-                        step_words = [word.translate(translation_table) for word in step_words]
-                        
-                        if ing_words[0] in step_words:
-                            ind = step_words.index(ing_words[0])
-                            inplace = True
-                            # for i in range(ing_words):
-                            #     if step_words[ind + i] != ing_words[i]:
-                            #         inplace = False
-                            if inplace:
-                                unit2 = step_words[ind - 1]
-                                amount = step_words[ind - 2]
-                                amount_ind = ind - 3
-                                while step_words[amount_ind].isdigit():
-                                    amount = step_words[amount_ind] + " " + amount
-                                    amount_ind -= 1
-                                say(text=f"For this step specifically, you need {amount} {unit2} of {ingr_name}.")
-                    say(text=f"You need: {amt} {unit} of {ingr_name} for the whole recipe.")
-            
-        elif user_message.startswith("what is") or user_message.startswith("how to") or user_message.startswith("how do i"):
+                        while i >= 0:
+                            if all(char.isdigit() or char in string.punctuation for char in search_text[i]):
+                                isDigit = True
+                                break
+                            else:
+                                i -= 1
+
+                        if not isDigit:
+                            say(text=f"You need: {amt} {unit} of {ingr_text} for this step.")
+                        else:
+                            unit2 = search_text[i + 1]
+                            amount = search_text[i]
+                            if i - 1 >= 0 and search_text[i-1].isdigit():
+                                amount = search_text[i-1] + " " + search_text[i]
+                            say(text=f"You need: {amount} {unit2} of {ingr_text} for this step.")
+                if ingr_text not in current_step:
+                    say(text=f"{ingr_text} not used in this step")
+            else:
+                say(text="Unrecognized command.")
+
+        elif "how do i do that" in user_message or "how do you do that" in user_message:
+            current_step = user_sessions.get(user_id)['steps']['Step ' + str(user_sessions.get(user_id)["current_step"])].split()
+            punctuation_without_slash = string.punctuation.replace("/", "")
+            translation_table = str.maketrans('', '', punctuation_without_slash)
+            current_step = [word.translate(translation_table) for word in current_step]
+            say(text="https://www.google.com/search?q="+'+'.join(current_step))
+
+        elif user_message.startswith("what is") or user_message.startswith("how to") or user_message.startswith("how do i") or "instead" in user_message:
             say(text="https://www.google.com/search?q="+'+'.join(user_message.split()))
         
         else:
