@@ -1,71 +1,38 @@
-def conversational_interface(recipe_data):
-    current_step = 0
-    while True:
-        user_input = input("You: ").strip().lower()
+import re
 
-        if user_input == "show me the ingredients list":
-            print("Ingredients:")
-            for ingredient in recipe_data['ingredients']:
-                print(f"- {ingredient}")
+def find_ingredients_in_string(ingredients, input_string):
+    # Normalize the ingredient names
+    normalized_ingredients = []
+    for ingredient in ingredients:
+        name = ingredient['name']
+        # Remove any additional descriptors
+        name = re.sub(r',.*', '', name)  # Remove anything after a comma
+        name = re.sub(r'\b\w+-\w+\b', '', name).strip()  # Remove hyphenated words
+        normalized_ingredients.append({'name': name, 'original_name': ingredient['name']})
 
-        elif user_input.startswith("go to the"):
-            try:
-                step_number = int(user_input.split()[-1]) - 1
-                if 0 <= step_number < len(recipe_data['directions']):
-                    current_step = step_number
-                    print(f"Step {current_step + 1}: {recipe_data['directions'][current_step]}")
-                else:
-                    print("Invalid step number.")
-            except ValueError:
-                print("Please enter a valid step number.")
+    found_ingredients = []
+    for normalized in normalized_ingredients:
+        if normalized['name'].lower() in input_string.lower():
+            found_ingredients.append(normalized['name'])
 
-        elif user_input == "go back one step":
-            if current_step > 0:
-                current_step -= 1
-                print(f"Step {current_step + 1}: {recipe_data['directions'][current_step]}")
-            else:
-                print("You are already at the first step.")
+    return found_ingredients
 
-        elif user_input == "go to the next step":
-            if current_step < len(recipe_data['directions']) - 1:
-                current_step += 1
-                print(f"Step {current_step + 1}: {recipe_data['directions'][current_step]}")
-            else:
-                print("You are already at the last step.")
 
-        elif user_input == "repeat please":
-            print(f"Step {current_step + 1}: {recipe_data['directions'][current_step]}")
 
-        elif user_input.startswith("how much of"):
-            ingredient_name = user_input.split("how much of ")[-1]
-            for ingredient in recipe_data['ingredients']:
-                if ingredient_name in ingredient["name"]:
-                    amt = ingredient['amount']
-                    unit = ingredient['unit']
-                    name = ingredient['name']
-                    
-                    print(f"You need: {amt} {unit} of {name}")
-                    break
-            else:
-                print(f"{ingredient_name} is not in the ingredients list.")
+if __name__ == "__main__":
+    string = "Mix in remaining 1 1/2 cups flour, remaining 1/2 cup warm water, 2 tablespoons sugar, vegetable oil, and salt."
+    ingredients = [
+        {'amount': '1 3/4', 'unit': 'cups', 'name': 'all-purpose flour, divided'},
+        {'amount': '3/4', 'unit': 'cup', 'name': 'warm water, divided'},
+        {'amount': '1', 'unit': 'tablespoon', 'name': 'active dry yeast'},
+        {'amount': '1', 'unit': 'teaspoon', 'name': 'white sugar'},
+        {'amount': '2', 'unit': 'tablespoons', 'name': 'white sugar'},
+        {'amount': '1', 'unit': 'tablespoon', 'name': 'vegetable oil'},
+        {'amount': '1/4', 'unit': 'teaspoon', 'name': 'salt'},
+        {'amount': '1/2', 'unit': 'teaspoon', 'name': 'baking powder'}
+    ]
 
-        elif user_input.startswith("what is"):
-            query = user_input.replace(" ", "+")
-            print(f"https://www.google.com/search?q={query}")
 
-        elif user_input.startswith("how do i"):
-            query = user_input.replace(" ", "+")
-            print(f"https://www.youtube.com/results?search_query={query}")
 
-        elif user_input == "how do i do that":
-            # This requires conversation history to infer what "that" refers to.
-            pass
-
-        elif user_input == "exit":
-            break
-
-        else:
-            print("I'm sorry, I didn't understand that.")
-
-# Example usage
-# conversational_interface(recipe_data)
+    found_ingredients = find_ingredients_in_string(ingredients, string)
+    print(found_ingredients)
