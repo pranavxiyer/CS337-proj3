@@ -44,7 +44,7 @@ def how_long_til_done(step_string, question):
 
 
 def answer_cooking_question(step_string, question):
-    match = re.search(r'how long do I (.*)', question)
+    match = re.search(r'how long do i (.*)', question)
     if not match:
         return how_long_til_done(step_string, question)
 

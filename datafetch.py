@@ -1,4 +1,3 @@
-import requests
 from bs4 import BeautifulSoup
 import re
 from directions import get_directions, fetch_recipe_page, get_methods_spacy
