@@ -8,8 +8,6 @@ import os
 import string
 import re
 
-# https://cs337-proj2.onrender.com/slack/events
-
 load_dotenv()
 app = App(
     token=os.environ.get("SLACK_BOT_TOKEN"),
@@ -40,6 +38,7 @@ def handle_dm_messages(event, say):
 
         if "allrecipes.com" in user_message:
             url = user_message.strip('<>')
+            say(text="Fetching recipe...")
             html_content = fetch_recipe_page(url)
             parsed_recipe = parse_recipe(html_content)
 
@@ -53,7 +52,7 @@ def handle_dm_messages(event, say):
                     "last_action": "recipe_selected"
                 }
 
-            say(text="What do you want to do?")
+            say(text="Recipe loaded. What would you like to do?")
             say(text="* List ingredients")
             say(text="* List tools")
             say(text="* Go over recipe steps")
@@ -109,7 +108,7 @@ def handle_dm_messages(event, say):
             else:
                 return say(text="Please provide an AllRecipes URL first.")
             
-        elif "how long do i" in user_message:
+        elif "how long do i" in user_message or "done" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
                 current_step = user_sessions.get(user_id)['steps']['Step ' + str(user_sessions.get(user_id)["current_step"])]
                 say(text=answer_cooking_question(current_step, user_message))
@@ -118,8 +117,8 @@ def handle_dm_messages(event, say):
         
         elif "how much" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
-                pattern = r"how much\s+([\w\s]+?)(?:\s+(do|should|is))?\b"
-                match = re.search(pattern, user_message)
+                pattern = r"how much\s+(.*?)(?:\s+(do|should|is)|$)"
+                match = re.search(pattern, user_message, re.IGNORECASE)
                 if match:
                     ingr_text = match.group(1)
                     for ingredient in user_sessions.get(user_id)['ingredients']:
@@ -155,7 +154,7 @@ def handle_dm_messages(event, say):
                 else:
                     say(text="Unrecognized command.")
             else:
-                return say(text="Please provide an AllRecipes URL first.")
+                say(text="Please provide an AllRecipes URL first.")
 
         elif "how do i do that" in user_message or "how do you do that" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
@@ -164,7 +163,7 @@ def handle_dm_messages(event, say):
 
                 ingredients = find_ingredients_in_string(user_sessions.get(user_id)['ingredients'], current_step)
                 if not ingredients:
-                    say(text="https://www.google.com/search?q=how+to+"+'+'.join(no_punctuation))
+                    say(text="Google Search: https://www.google.com/search?q=how+to+"+'+'.join(no_punctuation))
                 else:
                     filtered_words = []
                     i = 0
@@ -176,13 +175,13 @@ def handle_dm_messages(event, say):
                         else:
                             filtered_words.append(no_punctuation[i])
                             i += 1
-                    say(text="https://www.google.com/search?q=how+to+"+'+'.join(filtered_words))
+                    say(text="Google Search: https://www.google.com/search?q=how+to+"+'+'.join(filtered_words))
             else:
                 return say(text="Please provide an AllRecipes URL first.")
 
         elif user_message.startswith("what is") or user_message.startswith("how to") or user_message.startswith("how do i") or "instead" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
-                say(text="https://www.google.com/search?q="+'+'.join(user_message.split()))
+                say(text="Google Search: https://www.google.com/search?q="+'+'.join(user_message.split()))
             else:
                 return say(text="Please provide an AllRecipes URL first.")
         
