@@ -33,7 +33,7 @@ def get_all_pos_tags(word):
     return pos_tags
 
 def answer_cooking_question(step_string, question):
-    match = re.search(r'how long do I (.*)', question)
+    match = re.search(r'how long do i (.*)', question)
     if not match:
         return "Invalid question format."
 
