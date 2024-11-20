@@ -107,10 +107,11 @@ def main():
 
         elif "how much" in user_message:
             if user_session.get("last_action") == "recipe_selected":
-                pattern = r"how much\s+([\w\s]+?)(?:\s+(do|should|is))?\b"
-                match = re.search(pattern, user_message)
+                pattern = r"how much\s+(.*?)(?:\s+(do|should|is)|$)"
+                match = re.search(pattern, user_message, re.IGNORECASE)
                 if match:
                     ingr_text = match.group(1)
+                    print(ingr_text)
                     for ingredient in user_session['ingredients']:
                         if ingr_text in ingredient["name"]:
                             amt = ingredient['amount']

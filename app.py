@@ -117,8 +117,8 @@ def handle_dm_messages(event, say):
         
         elif "how much" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
-                pattern = r"how much\s+([\w\s]+?)(?:\s+(do|should|is))?\b"
-                match = re.search(pattern, user_message)
+                pattern = r"how much\s+(.*?)(?:\s+(do|should|is)|$)"
+                match = re.search(pattern, user_message, re.IGNORECASE)
                 if match:
                     ingr_text = match.group(1)
                     for ingredient in user_sessions.get(user_id)['ingredients']:
