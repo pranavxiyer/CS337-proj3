@@ -5,7 +5,6 @@ import nltk
 from nltk.corpus import verbnet
 from nltk.corpus import wordnet as wn
 from nltk.stem.wordnet import WordNetLemmatizer
-from rapidfuzz import fuzz
 
 spacy_model = spacy.load("en_core_web_lg")
 cooking_class = verbnet.vnclass('cooking-45.3')
