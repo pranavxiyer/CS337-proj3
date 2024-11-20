@@ -114,18 +114,42 @@ def get_first_cooking_verb(sentence):
             return token.text.lower()
     return None
 
+def get_temperature_num(sentence):
+    num_temps = []
+    spacy_output = spacy_model(sentence)
+    for token in spacy_output:
+        if token.like_num:
+            num_temps.append(token.text)
+
+    tokenized_sentence = nltk.word_tokenize(sentence.lower())
+
+    for i in range(len(tokenized_sentence)):
+        if tokenized_sentence[i] in num_temps:
+            
+            print(tokenized_sentence[i])
+            if i + 1 in range(len(tokenized_sentence)):
+                if tokenized_sentence[i+1] in "degrees":
+                    print(tokenized_sentence[i+1])
+    
+
+
+
 
     
 
 
 
 # recipe_url = "https://www.allrecipes.com/recipe/8462067/spinach-artichoke-garlic-naan-pizza"
-# recipe_url = "https://www.allrecipes.com/chicken-carbonara-pasta-bake-recipe-7969899"
+recipe_url = "https://www.allrecipes.com/chicken-carbonara-pasta-bake-recipe-7969899"
 
-recipe_url = "https://www.allrecipes.com/recipe/7011/chinese-steamed-buns/"
+# recipe_url = "https://www.allrecipes.com/recipe/7011/chinese-steamed-buns/"
 recipe_html = fetch_recipe_page(recipe_url)
 directions = get_directions(recipe_html)
 # print(f"directions: {directions}")
 # print(get_methods_nltk(directions))
 # print(get_methods_spacy(directions))
-print(get_first_cooking_verb('Knead until dough is smooth and elastic.'))
+# print(get_first_cooking_verb('Knead until dough is smooth and elastic.'))
+# print(get_temperature('Bring some water to a boil in a wok, then reduce heat to medium and keep water at a low boil.'))
+get_temperature_num('Preheat oven to 325 degrees F (165 degrees C).')
+# get_temperature_num("The temperature is 25°C.")
+
