@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import re
 from directions import get_directions, fetch_recipe_page, get_methods_spacy
+from parserhelper import extract_descriptor_and_preparation
 from toolfinding import extract_tools
 from unicodedata import*
 
@@ -27,6 +28,10 @@ def get_ingredients(html_content):
                 ing["unit"] = clean_text(spanner.text)
             elif spanner.has_attr("data-ingredient-name"):
                 ing["name"] = clean_text(spanner.text)
+        # print(ing["name"])
+        descriptor, preparation = extract_descriptor_and_preparation(ing["name"])
+        ing["descriptor"] = descriptor
+        ing["preparation"] = preparation
         ingredients.append(ing)
 
     return ingredients
