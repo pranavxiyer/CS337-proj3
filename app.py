@@ -108,7 +108,7 @@ def handle_dm_messages(event, say):
             else:
                 return say(text="Please provide an AllRecipes URL first.")
             
-        elif "how long do i" in user_message:
+        elif "how long do i" in user_message or "done" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
                 current_step = user_sessions.get(user_id)['steps']['Step ' + str(user_sessions.get(user_id)["current_step"])]
                 say(text=answer_cooking_question(current_step, user_message))

@@ -98,7 +98,7 @@ def main():
             else:
                 print("Please provide a valid AllRecipes URL first.")
 
-        elif "how long do i" in user_message:
+        elif "how long do i" in user_message or "done" in user_message:
             if user_session.get("last_action") == "recipe_selected":
                 current_step = user_session['steps'][f"Step {user_session['current_step']}"]
                 print(answer_cooking_question(current_step, user_message))
@@ -111,7 +111,6 @@ def main():
                 match = re.search(pattern, user_message, re.IGNORECASE)
                 if match:
                     ingr_text = match.group(1)
-                    print(ingr_text)
                     for ingredient in user_session['ingredients']:
                         if ingr_text in ingredient["name"]:
                             amt = ingredient['amount']
