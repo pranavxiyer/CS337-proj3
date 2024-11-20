@@ -2,6 +2,8 @@ from slack_bolt import App
 from dotenv import load_dotenv
 from directions import fetch_recipe_page 
 from datafetch import parse_recipe
+from directions import get_first_cooking_verb
+from parserhelper import find_ingredients_in_string
 import os
 import string
 import re
@@ -139,11 +141,24 @@ def handle_dm_messages(event, say):
                 say(text="Unrecognized command.")
 
         elif "how do i do that" in user_message or "how do you do that" in user_message:
-            current_step = user_sessions.get(user_id)['steps']['Step ' + str(user_sessions.get(user_id)["current_step"])].split()
-            punctuation_without_slash = string.punctuation.replace("/", "")
-            translation_table = str.maketrans('', '', punctuation_without_slash)
-            current_step = [word.translate(translation_table) for word in current_step]
-            say(text="https://www.google.com/search?q="+'+'.join(current_step))
+            current_step = user_sessions.get(user_id)['steps']['Step ' + str(user_sessions.get(user_id)["current_step"])]
+            no_punctuation = current_step.translate(str.maketrans('', '', string.punctuation)).split()
+
+            ingredients = find_ingredients_in_string(user_sessions.get(user_id)['ingredients'], current_step)
+            if not ingredients:
+                say(text="https://www.google.com/search?q=how+to+"+'+'.join(no_punctuation))
+            else:
+                filtered_words = []
+                i = 0
+                while i < len(no_punctuation):
+                    if no_punctuation[i].isdigit():
+                        while i < len(no_punctuation) and no_punctuation[i].isdigit():
+                            i += 1
+                        i += 1
+                    else:
+                        filtered_words.append(no_punctuation[i])
+                        i += 1
+                say(text="https://www.google.com/search?q=how+to+"+'+'.join(filtered_words))
 
         elif user_message.startswith("what is") or user_message.startswith("how to") or user_message.startswith("how do i") or "instead" in user_message:
             say(text="https://www.google.com/search?q="+'+'.join(user_message.split()))
