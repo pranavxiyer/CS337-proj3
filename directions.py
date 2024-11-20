@@ -6,6 +6,7 @@ from nltk.corpus import verbnet
 from nltk.corpus import wordnet as wn
 from nltk.stem.wordnet import WordNetLemmatizer
 from rapidfuzz import fuzz
+import re
 
 spacy_model = spacy.load("en_core_web_lg")
 cooking_class = verbnet.vnclass('cooking-45.3')
@@ -123,13 +124,42 @@ def get_temperature_num(sentence):
 
     tokenized_sentence = nltk.word_tokenize(sentence.lower())
 
+    temp_phrases = []
+
     for i in range(len(tokenized_sentence)):
-        if tokenized_sentence[i] in num_temps:
-            
-            print(tokenized_sentence[i])
-            if i + 1 in range(len(tokenized_sentence)):
+        if tokenized_sentence[i] in num_temps or re.search(r'\d+', tokenized_sentence[i]):
+            if '°' in tokenized_sentence[i]:
+                temp_phrase = tokenized_sentence[i]
+                temp_phrases.append(temp_phrase)
+            elif i + 2 in range(len(tokenized_sentence)):
                 if tokenized_sentence[i+1] in "degrees":
-                    print(tokenized_sentence[i+1])
+                    temp_phrase = tokenized_sentence[i] + " " + tokenized_sentence[i+1] + " " + tokenized_sentence[i+2]
+                    temp_phrases.append(temp_phrase)
+
+                elif '°' in tokenized_sentence[i+1]:
+                    temp_phrase = tokenized_sentence[i] + " " + tokenized_sentence[i+1]
+                    temp_phrases.append(temp_phrase)
+    return temp_phrases
+
+def get_temperature_regular(sentence):
+    temp_keywords = ["low", "medium", "high", "rare", "well", "done", "al", "dente"]
+    tokenized_sentence = nltk.word_tokenize(sentence.lower())
+    for i in range(len(tokenized_sentence)):
+        token = tokenized_sentence[i]
+        for keyword in temp_keywords:
+            if keyword in token:
+                if i + 1 in range(len(tokenized_sentence)):
+                    if any(keyword in tokenized_sentence[i + 1] for keyword in temp_keywords):
+                        return tokenized_sentence[i] + " " + tokenized_sentence[i + 1]
+                    else:
+                        if token == 'al':
+                            break
+                        return token
+                else:
+                    return token 
+
+                
+                    
     
 
 
@@ -140,16 +170,19 @@ def get_temperature_num(sentence):
 
 
 # recipe_url = "https://www.allrecipes.com/recipe/8462067/spinach-artichoke-garlic-naan-pizza"
-recipe_url = "https://www.allrecipes.com/chicken-carbonara-pasta-bake-recipe-7969899"
+# recipe_url = "https://www.allrecipes.com/chicken-carbonara-pasta-bake-recipe-7969899"
 
 # recipe_url = "https://www.allrecipes.com/recipe/7011/chinese-steamed-buns/"
-recipe_html = fetch_recipe_page(recipe_url)
-directions = get_directions(recipe_html)
+# recipe_html = fetch_recipe_page(recipe_url)
+# directions = get_directions(recipe_html)
 # print(f"directions: {directions}")
 # print(get_methods_nltk(directions))
 # print(get_methods_spacy(directions))
 # print(get_first_cooking_verb('Knead until dough is smooth and elastic.'))
 # print(get_temperature('Bring some water to a boil in a wok, then reduce heat to medium and keep water at a low boil.'))
-get_temperature_num('Preheat oven to 325 degrees F (165 degrees C).')
-# get_temperature_num("The temperature is 25°C.")
+# print(get_temperature_num('Preheat oven to 325 degrees F (165 degrees C).'))
+# print(get_temperature_num("The temperature is 25°C."))
+# print(get_temperature_regular("Heat a nonstick skillet over medium-high heat.")) 
+# print(get_temperature_regular("Sear and cook the steak in the hot skillet for 3 to 4 minutes on each side for medium rare, or to your desired degree of doneness."))
+# print(get_temperature_num("An instant-read thermometer inserted into the center should read 130 degrees F (54 degrees C) for medium rare."))
 
