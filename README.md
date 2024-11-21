@@ -43,7 +43,7 @@ Slack functionality is the same as the functionality in the terminal assistant, 
 - "list all ingredients for this recipe, with preparation"
 - "list all tools needed for this recipe"
 - "list all recipe steps"
-- "go over recipe steps" (to start from the first step)
+- "start step" (to start from the first step)
 
 2. Navigation utterances
 
