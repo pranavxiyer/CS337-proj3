@@ -155,23 +155,7 @@ def get_temperature_api(sentence):
     else:
         return "no temperature"
 
-                
-
-
 # recipe_url = "https://www.allrecipes.com/recipe/8462067/spinach-artichoke-garlic-naan-pizza"
 # recipe_url = "https://www.allrecipes.com/chicken-carbonara-pasta-bake-recipe-7969899"
 # recipe_url = "https://www.allrecipes.com/recipe/7011/chinese-steamed-buns/"
-
-# recipe_html = fetch_recipe_page(recipe_url)
-# directions = get_directions(recipe_html)
-# print(f"directions: {directions}")
-# print(get_methods_nltk(directions))
-# print(get_methods_spacy(directions))
-# print(get_first_cooking_verb('Knead until dough is smooth and elastic.'))
-# print(get_temperature('Bring some water to a boil in a wok, then reduce heat to medium and keep water at a low boil.'))
-# print(get_temperature_num('Preheat oven to 325 degrees F (165 degrees C).'))
-# print(get_temperature_num("The temperature is 25°C."))
-# print(get_temperature_regular("Heat a nonstick skillet over medium-high heat.")) 
-# print(get_temperature_regular("Sear and cook the steak in the hot skillet for 3 to 4 minutes on each side for medium rare, or to your desired degree of doneness."))
-# print(get_temperature_num("An instant-read thermometer inserted into the center should read 130 degrees F (54 degrees C) for medium rare."))
 
