@@ -1,6 +1,7 @@
 from slack_bolt import App
 from dotenv import load_dotenv
 from directions import fetch_recipe_page 
+from directions import get_temperature_api
 from datafetch import parse_recipe
 from parserhelper import find_ingredients_in_string
 from parserhelper import answer_cooking_question
@@ -74,16 +75,13 @@ def handle_dm_messages(event, say):
             else:
                 say(text="Please provide an AllRecipes URL first.")
 
-        elif "list" in user_message and "recipe steps" in user_message:
+        elif "list" in user_message and "steps" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
                 steps = user_sessions[user_id].get("steps", [])
                 for step, value in steps.items():
                     say(f"{step}: {value}")
             else:
                 say(text="Please provide an AllRecipes URL first.")
-
-        elif "recipe step" in user_message:
-            say(text=get_step(user_id, 1))
 
         elif "next" in user_message and "step" in user_message:
             say(text=get_step(user_id, 1))
@@ -95,7 +93,8 @@ def handle_dm_messages(event, say):
             say(text=get_step(user_id, -1))
 
         elif " to step " in user_message:
-            step = int(user_message.split()[-1])
+            no_punctuation = user_message.translate(str.maketrans('', '', string.punctuation)).strip()
+            step = int(no_punctuation.split()[-1])
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
                 steps = user_sessions[user_id].get("steps", [])
                 step_number = 'Step ' + str(step)
@@ -106,14 +105,24 @@ def handle_dm_messages(event, say):
                 else:
                     say(text=step_number + " does not exist.")
             else:
-                return say(text="Please provide an AllRecipes URL first.")
+                say(text="Please provide an AllRecipes URL first.")
+
+        elif "step" in user_message:
+            say(text=get_step(user_id, 1))
+            
+        elif "temperature" in user_message:
+            if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
+                current_step = user_sessions.get(user_id)['steps']['Step ' + str(user_sessions.get(user_id)["current_step"])]
+                say(text=get_temperature_api(current_step))
+            else:
+                say(text="Please provide an AllRecipes URL first.")
             
         elif "how long do i" in user_message or "done" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
                 current_step = user_sessions.get(user_id)['steps']['Step ' + str(user_sessions.get(user_id)["current_step"])]
                 say(text=answer_cooking_question(current_step, user_message))
             else:
-                return say(text="Please provide an AllRecipes URL first.")
+                say(text="Please provide an AllRecipes URL first.")
         
         elif "how much" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
@@ -177,7 +186,7 @@ def handle_dm_messages(event, say):
                             i += 1
                     say(text="Google Search: https://www.google.com/search?q=how+to+"+'+'.join(filtered_words))
             else:
-                return say(text="Please provide an AllRecipes URL first.")
+                say(text="Please provide an AllRecipes URL first.")
             
         elif "instead" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
