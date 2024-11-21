@@ -27,7 +27,7 @@ To test in Slack, message cheryl@u.northwestern.edu to set up a time. We'll invi
 
 Slack functionality is the same as the functionality in the terminal assistant, and is also displayed in the video.
 
-# Extra Feaatures:
+# Extra Features:
 
 1. conversational interface through Slack
 2.

@@ -181,7 +181,7 @@ def handle_dm_messages(event, say):
             
         elif "instead" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
-                pattern = r"instead of\s+(.*?)(?:\s+to|$)"
+                pattern = r"instead of\s+(.*?)(?:\s+to|[?.!,]|$)"
                 match = re.search(pattern, user_message, re.IGNORECASE)
                 if match:
                     item = match.group(1)
