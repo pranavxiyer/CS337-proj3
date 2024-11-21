@@ -151,7 +151,7 @@ def get_temperature_api(sentence):
     elif len(temp_nums) > 0:
         return temp_nums
     elif word:
-        return word
+        return [word]
     else:
         return "no temperature"
 
