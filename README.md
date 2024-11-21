@@ -29,8 +29,10 @@ Slack functionality is the same as the functionality in the terminal assistant, 
 
 # Extra Features:
 
-1. conversational interface through Slack
-2.
+1. Conversational interface through Slack
+2. Ingredient Descriptor (e.g. fresh, extra-virgin)
+3. Ingredient Preparation (e.g. finely chopped)
+4. Other cooking methods used (e.g. chop, grate, stir, shake, mince, crush, squeeze, etc.)
 
 # Question answering goal examples:
 
