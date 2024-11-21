@@ -39,6 +39,8 @@ Slack functionality is the same as the functionality in the terminal assistant, 
 1. Recipe retrieval and display
 
 - "list all ingredients for this recipe"
+- "list all ingredients for this recipe, with descriptors"
+- "list all ingredients for this recipe, with preparation"
 - "list all tools needed for this recipe"
 - "list all recipe steps"
 - "go over recipe steps" (to start from the first step)
