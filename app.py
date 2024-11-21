@@ -43,15 +43,14 @@ def handle_dm_messages(event, say):
             html_content = fetch_recipe_page(url)
             parsed_recipe = parse_recipe(html_content)
 
-            if user_id not in user_sessions:
-                user_sessions[user_id] = {
-                    "ingredients": parsed_recipe['ingredients'],
-                    "tools": parsed_recipe['tools'],
-                    "steps": parsed_recipe['directions'],
-                    "methods": parsed_recipe['methods'],
-                    "current_step": 0,
-                    "last_action": "recipe_selected"
-                }
+            user_sessions[user_id] = {
+                "ingredients": parsed_recipe['ingredients'],
+                "tools": parsed_recipe['tools'],
+                "steps": parsed_recipe['directions'],
+                "methods": parsed_recipe['methods'],
+                "current_step": 0,
+                "last_action": "recipe_selected"
+            }
 
             say(text="Recipe loaded. What would you like to do?")
             say(text="* List ingredients")
