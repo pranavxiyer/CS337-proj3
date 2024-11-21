@@ -136,7 +136,7 @@ def handle_dm_messages(event, say):
         elif "temperature" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
                 current_step = user_sessions.get(user_id)['steps']['Step ' + str(user_sessions.get(user_id)["current_step"])]
-                say(text=get_temperature_api(current_step))
+                say(text=', '.join(get_temperature_api(current_step)))
             else:
                 say(text="Please provide an AllRecipes URL first.")
             
@@ -232,6 +232,9 @@ def handle_dm_messages(event, say):
                 say(text="Google Search: https://www.google.com/search?q="+'+'.join(user_message.split()))
             else:
                 say(text="Please provide an AllRecipes URL first.")
+
+        elif user_message == "cs337" or user_message == "nlp":
+            say(text="hi larry and simon :D")
         
         else:
             if user_id not in user_sessions:

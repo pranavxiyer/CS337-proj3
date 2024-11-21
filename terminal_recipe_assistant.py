@@ -127,7 +127,7 @@ def main():
         elif "temperature" in user_message:
             if user_session.get("last_action") == "recipe_selected":
                 current_step = user_session['steps'][f"Step {user_session['current_step']}"]
-                print(get_temperature_api(current_step))
+                print(', '.join(get_temperature_api(current_step)))
             else:
                 print("Please provide an AllRecipes URL first.")
 
@@ -226,6 +226,9 @@ def main():
         elif user_message in ["exit", "quit"]:
             print("Goodbye!")
             break
+
+        elif user_message == "cs337" or user_message == "nlp":
+            print("hi larry and simon :D")
 
         else:
             if user_session.get("last_action") == "recipe_selected":
