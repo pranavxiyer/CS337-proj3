@@ -1,4 +1,5 @@
 from directions import fetch_recipe_page
+from directions import get_temperature_api
 from datafetch import parse_recipe
 from parserhelper import find_ingredients_in_string
 from parserhelper import answer_cooking_question
@@ -6,7 +7,6 @@ import string
 import re
 
 user_session = {}
-
 def get_step(delta):
     if user_session.get("last_action") == "recipe_selected":
         user_session["current_step"] += delta
@@ -44,16 +44,32 @@ def main():
             print("Recipe loaded. What would you like to do?")
             print("* List ingredients")
             print("* List tools")
+            print("* List cooking methods")
             print("* Go over recipe steps")
 
         elif "ingredients" in user_message:
             if user_session.get("last_action") == "recipe_selected":
-                ingredients = user_session.get("ingredients", [])
-                formatted_ingredients = [
-                    f"{item['amount']} {item['unit']} {item['name']}" for item in ingredients
-                ]
-                print("Here are the ingredients:")
-                print("\n".join(formatted_ingredients))
+                if "descriptor" in user_message:
+                    ingredients = user_session.get("ingredients", [])
+                    formatted_ingredients = [
+                        f"{item['amount']} {item['unit']} {item['name']}, descriptor is: {item['descriptor']}" for item in ingredients
+                    ]
+                    print("Here are the ingredients:")
+                    print("\n".join(formatted_ingredients))
+                elif "preparation" in user_message:
+                    ingredients = user_session.get("ingredients", [])
+                    formatted_ingredients = [
+                        f"{item['amount']} {item['unit']} {item['name']}, preparation is: {item['preparation']}" for item in ingredients
+                    ]
+                    print("Here are the ingredients:")
+                    print("\n".join(formatted_ingredients))
+                else:
+                    ingredients = user_session.get("ingredients", [])
+                    formatted_ingredients = [
+                        f"{item['amount']} {item['unit']} {item['name']}" for item in ingredients
+                    ]
+                    print("Here are the ingredients:")
+                    print("\n".join(formatted_ingredients))
             else:
                 print("Please provide a valid AllRecipes URL first.")
         
@@ -65,7 +81,16 @@ def main():
             else:
                 print("Please provide a valid AllRecipes URL first.")
 
-        elif "list" in user_message and "recipe steps" in user_message:
+        elif "methods" in user_message:
+            if user_session.get("last_action") == "recipe_selected":
+                primary_methods = user_session.get("methods", {})[0]
+                secondary_methods = user_session.get("methods", {})[1]
+                print("Here are the methods:\n" + ", ".join(primary_methods))
+                print("Here are the secondary methods:\n" + ", ".join(secondary_methods)) 
+            else:
+                print("Please provide a valid AllRecipes URL first.")
+
+        elif "list" in user_message and "steps" in user_message:
             if user_session.get("last_action") == "recipe_selected":
                 steps = user_session.get("steps", {})
                 for step, value in steps.items():
@@ -73,7 +98,7 @@ def main():
             else:
                 print("Please provide a valid AllRecipes URL first.")
 
-        elif "recipe step" in user_message:
+        elif "start" in user_message and "step" in user_message:
             print(get_step(1))
 
         elif "next" in user_message and "step" in user_message:
@@ -86,7 +111,8 @@ def main():
             print(get_step(-1))
 
         elif " to step " in user_message:
-            step = int(user_message.split()[-1])
+            no_punctuation = user_message.translate(str.maketrans('', '', string.punctuation)).strip()
+            step = int(no_punctuation.split()[-1])
             if user_session.get("last_action") == "recipe_selected":
                 steps = user_session.get("steps", {})
                 step_number = f"Step {step}"
@@ -97,6 +123,13 @@ def main():
                     print(f"{step_number} does not exist.")
             else:
                 print("Please provide a valid AllRecipes URL first.")
+
+        elif "temperature" in user_message:
+            if user_session.get("last_action") == "recipe_selected":
+                current_step = user_session['steps'][f"Step {user_session['current_step']}"]
+                print(get_temperature_api(current_step))
+            else:
+                print("Please provide an AllRecipes URL first.")
 
         elif "how long do i" in user_message or "done" in user_message:
             if user_session.get("last_action") == "recipe_selected":

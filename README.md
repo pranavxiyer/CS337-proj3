@@ -39,9 +39,11 @@ Slack functionality is the same as the functionality in the terminal assistant, 
 1. Recipe retrieval and display
 
 - "list all ingredients for this recipe"
+- "list all ingredients for this recipe, with descriptors"
+- "list all ingredients for this recipe, with preparation"
 - "list all tools needed for this recipe"
 - "list all recipe steps"
-- "go over recipe steps" (to start from the first step)
+- "start step" (to start from the first step)
 
 2. Navigation utterances
 
@@ -55,7 +57,7 @@ Slack functionality is the same as the functionality in the terminal assistant, 
 - "How long do I..."
 - "When is it done?"
 - "How much <ingredient (as described in the step)> do I need?"
-- "What temperature?"
+- "What temperature should I...?"
 - "What can I use instead of <ingredient or tool>?"
 
 4. Simple "what is" questions

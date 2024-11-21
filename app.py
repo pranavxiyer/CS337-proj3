@@ -1,6 +1,7 @@
 from slack_bolt import App
 from dotenv import load_dotenv
 from directions import fetch_recipe_page 
+from directions import get_temperature_api
 from datafetch import parse_recipe
 from parserhelper import find_ingredients_in_string
 from parserhelper import answer_cooking_question
@@ -55,15 +56,29 @@ def handle_dm_messages(event, say):
             say(text="Recipe loaded. What would you like to do?")
             say(text="* List ingredients")
             say(text="* List tools")
+            say(text="* List cooking methods")
             say(text="* Go over recipe steps")
         
         elif "ingredients" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
-                ingredients = user_sessions[user_id].get("ingredients", [])
+                if "descriptor" in user_message:
+                    ingredients = user_sessions[user_id].get("ingredients", [])
 
-                formatted_ingredients = [f"{item['amount']} {item['unit']} {item['name']}" for item in ingredients]
+                    formatted_ingredients = [f"{item['amount']} {item['unit']} {item['name']}, descriptor is: {item['descriptor']}" for item in ingredients]
 
-                say(text="Here are the ingredients:\n" + "\n".join(formatted_ingredients))
+                    say(text="Here are the ingredients:\n" + "\n".join(formatted_ingredients))
+                elif "preparation" in user_message:
+                    ingredients = user_sessions[user_id].get("ingredients", [])
+
+                    formatted_ingredients = [f"{item['amount']} {item['unit']} {item['name']}, preparation is: {item['preparation']}" for item in ingredients]
+
+                    say(text="Here are the ingredients:\n" + "\n".join(formatted_ingredients))
+                else:
+                    ingredients = user_sessions[user_id].get("ingredients", [])
+
+                    formatted_ingredients = [f"{item['amount']} {item['unit']} {item['name']}" for item in ingredients]
+
+                    say(text="Here are the ingredients:\n" + "\n".join(formatted_ingredients))
             else:
                 say(text="Please provide an AllRecipes URL first.")
             
@@ -73,8 +88,17 @@ def handle_dm_messages(event, say):
                 say(text="Here are the tools:\n" + "\n".join(tools))
             else:
                 say(text="Please provide an AllRecipes URL first.")
+        
+        elif "methods" in user_message:
+            if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
+                primary_methods = user_sessions[user_id].get("methods", {})[0]
+                secondary_methods = user_sessions[user_id].get("methods", {})[1]
+                say(text="Here are the methods:\n" + ", ".join(primary_methods))
+                say(text="Here are the secondary methods:\n" + ", ".join(secondary_methods)) 
+            else:
+                say(text="Please provide an AllRecipes URL first.")
 
-        elif "list" in user_message and "recipe steps" in user_message:
+        elif "list" in user_message and "steps" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
                 steps = user_sessions[user_id].get("steps", [])
                 for step, value in steps.items():
@@ -82,7 +106,7 @@ def handle_dm_messages(event, say):
             else:
                 say(text="Please provide an AllRecipes URL first.")
 
-        elif "recipe step" in user_message:
+        elif "start" in user_message and "step" in user_message:
             say(text=get_step(user_id, 1))
 
         elif "next" in user_message and "step" in user_message:
@@ -95,7 +119,8 @@ def handle_dm_messages(event, say):
             say(text=get_step(user_id, -1))
 
         elif " to step " in user_message:
-            step = int(user_message.split()[-1])
+            no_punctuation = user_message.translate(str.maketrans('', '', string.punctuation)).strip()
+            step = int(no_punctuation.split()[-1])
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
                 steps = user_sessions[user_id].get("steps", [])
                 step_number = 'Step ' + str(step)
@@ -106,14 +131,21 @@ def handle_dm_messages(event, say):
                 else:
                     say(text=step_number + " does not exist.")
             else:
-                return say(text="Please provide an AllRecipes URL first.")
+                say(text="Please provide an AllRecipes URL first.")
+            
+        elif "temperature" in user_message:
+            if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
+                current_step = user_sessions.get(user_id)['steps']['Step ' + str(user_sessions.get(user_id)["current_step"])]
+                say(text=get_temperature_api(current_step))
+            else:
+                say(text="Please provide an AllRecipes URL first.")
             
         elif "how long do i" in user_message or "done" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
                 current_step = user_sessions.get(user_id)['steps']['Step ' + str(user_sessions.get(user_id)["current_step"])]
                 say(text=answer_cooking_question(current_step, user_message))
             else:
-                return say(text="Please provide an AllRecipes URL first.")
+                say(text="Please provide an AllRecipes URL first.")
         
         elif "how much" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
@@ -177,7 +209,7 @@ def handle_dm_messages(event, say):
                             i += 1
                     say(text="Google Search: https://www.google.com/search?q=how+to+"+'+'.join(filtered_words))
             else:
-                return say(text="Please provide an AllRecipes URL first.")
+                say(text="Please provide an AllRecipes URL first.")
             
         elif "instead" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
