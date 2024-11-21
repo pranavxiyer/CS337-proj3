@@ -22,22 +22,6 @@ def fetch_recipe_page(url):
     else:
         raise Exception(f"Failed to fetch the page. Status code: {response.status_code}")
 
-# def get_directions_old(html_content):
-#     directions = {}
-#     soup = BeautifulSoup(html_content, 'html.parser')
-#     direction_results = soup.find(id="mm-recipes-steps_1-0")
-#     direction_ol = direction_results.find("ol")
-#     direction_li = direction_ol.find_all("li")
-    
-#     for i in range(len(direction_li)):
-#         p = direction_li[i].find("p")
-#         real_step = i + 1
-#         step_text = "Step " + str(real_step)
-#         step_direction = p.text.strip()
-#         directions[step_text] = step_direction
-    
-#     return directions
-
 def get_directions(html_content):
     directions = {}
     directions_list = []
@@ -157,22 +141,27 @@ def get_temperature_regular(sentence):
                         return token
                 else:
                     return token 
+    return None
+
+def get_temperature_api(sentence):
+    temp_nums = get_temperature_num(sentence)
+    word = get_temperature_regular(sentence)
+    if len(temp_nums) > 0 and word:
+        return temp_nums, word
+    elif len(temp_nums) > 0:
+        return temp_nums
+    elif word:
+        return word
+    else:
+        return "no temperature"
 
                 
-                    
-    
-
-
-
-
-    
-
 
 
 # recipe_url = "https://www.allrecipes.com/recipe/8462067/spinach-artichoke-garlic-naan-pizza"
 # recipe_url = "https://www.allrecipes.com/chicken-carbonara-pasta-bake-recipe-7969899"
-
 # recipe_url = "https://www.allrecipes.com/recipe/7011/chinese-steamed-buns/"
+
 # recipe_html = fetch_recipe_page(recipe_url)
 # directions = get_directions(recipe_html)
 # print(f"directions: {directions}")
