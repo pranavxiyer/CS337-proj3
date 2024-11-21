@@ -27,9 +27,47 @@ To test in Slack, message cheryl@u.northwestern.edu to set up a time. We'll invi
 
 Slack functionality is the same as the functionality in the terminal assistant, and is also displayed in the video.
 
-# Extra Feaatures:
+# Extra Features:
 
-1. conversational interface through Slack
-2.
+1. Conversational interface through Slack
+2. Ingredient Descriptor (e.g. fresh, extra-virgin)
+3. Ingredient Preparation (e.g. finely chopped)
+4. Other cooking methods used (e.g. chop, grate, stir, shake, mince, crush, squeeze, etc.)
 
 # Question answering goal examples:
+
+1. Recipe retrieval and display
+
+- "list all ingredients for this recipe"
+- "list all tools needed for this recipe"
+- "list all recipe steps"
+- "go over recipe steps" (to start from the first step)
+
+2. Navigation utterances
+
+- "repeat step"
+- "next step"
+- "previous step"
+- "go to step 1" or "go to step 14"
+
+3. Asking about the parameters of the current step
+
+- "How long do I..."
+- "When is it done?"
+- "How much <ingredient (as described in the step)> do I need?"
+- "What temperature?"
+- "What can I use instead of <ingredient or tool>?"
+
+4. Simple "what is" questions
+
+- "What is..."
+
+5. Specific "how to" questions
+
+- "How to..."
+- "How do I..."
+
+6. Vague "how to" questions
+
+- "How do I do that?"
+- "How do you do that?"

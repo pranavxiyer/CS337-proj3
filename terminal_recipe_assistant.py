@@ -168,7 +168,23 @@ def main():
             else:
                 print("Please provide a valid AllRecipes URL first.")
 
-        elif user_message.startswith("what is") or user_message.startswith("how to") or user_message.startswith("how do i") or "instead" in user_message:
+        elif "instead" in user_message:
+            if user_session.get("last_action") == "recipe_selected":
+                pattern = r"instead of\s+(.*?)(?:\s+to|[?.!,]|$)"
+                match = re.search(pattern, user_message, re.IGNORECASE)
+                if match:
+                    item = match.group(1)
+                    current_step = user_session['steps'][f"Step {user_session['current_step']}"]
+                    if item not in current_step:
+                        print(f"{item} not used in current step.")
+                    else:
+                        print(f"Google Search: https://www.google.com/search?q={'+'.join(user_message.split())}")
+                else:
+                    print("Unrecognized command.")
+            else:
+                print("Please provide a valid AllRecipes URL first.")
+
+        elif user_message.startswith("what is") or user_message.startswith("how to") or user_message.startswith("how do i") or user_message.startswith("how do you"):
             if user_session.get("last_action") == "recipe_selected":
                 print(f"Google Search: https://www.google.com/search?q={'+'.join(user_message.split())}")
             else:
