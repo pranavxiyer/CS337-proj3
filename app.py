@@ -56,15 +56,29 @@ def handle_dm_messages(event, say):
             say(text="Recipe loaded. What would you like to do?")
             say(text="* List ingredients")
             say(text="* List tools")
+            say(text="* List cooking methods")
             say(text="* Go over recipe steps")
         
         elif "ingredients" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
-                ingredients = user_sessions[user_id].get("ingredients", [])
+                if "descriptor" in user_message:
+                    ingredients = user_sessions[user_id].get("ingredients", [])
 
-                formatted_ingredients = [f"{item['amount']} {item['unit']} {item['name']}" for item in ingredients]
+                    formatted_ingredients = [f"{item['amount']} {item['unit']} {item['name']}, descriptor is: {item['descriptor']}" for item in ingredients]
 
-                say(text="Here are the ingredients:\n" + "\n".join(formatted_ingredients))
+                    say(text="Here are the ingredients:\n" + "\n".join(formatted_ingredients))
+                elif "preparation" in user_message:
+                    ingredients = user_sessions[user_id].get("ingredients", [])
+
+                    formatted_ingredients = [f"{item['amount']} {item['unit']} {item['name']}, preparation is: {item['preparation']}" for item in ingredients]
+
+                    say(text="Here are the ingredients:\n" + "\n".join(formatted_ingredients))
+                else:
+                    ingredients = user_sessions[user_id].get("ingredients", [])
+
+                    formatted_ingredients = [f"{item['amount']} {item['unit']} {item['name']}" for item in ingredients]
+
+                    say(text="Here are the ingredients:\n" + "\n".join(formatted_ingredients))
             else:
                 say(text="Please provide an AllRecipes URL first.")
             
@@ -72,6 +86,15 @@ def handle_dm_messages(event, say):
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
                 tools = user_sessions[user_id].get("tools", [])
                 say(text="Here are the tools:\n" + "\n".join(tools))
+            else:
+                say(text="Please provide an AllRecipes URL first.")
+        
+        elif "methods" in user_message:
+            if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
+                primary_methods = user_sessions[user_id].get("methods", {})[0]
+                secondary_methods = user_sessions[user_id].get("methods", {})[1]
+                say(text="Here are the methods:\n" + ", ".join(primary_methods))
+                say(text="Here are the secondary methods:\n" + ", ".join(secondary_methods)) 
             else:
                 say(text="Please provide an AllRecipes URL first.")
 
@@ -82,6 +105,9 @@ def handle_dm_messages(event, say):
                     say(f"{step}: {value}")
             else:
                 say(text="Please provide an AllRecipes URL first.")
+
+        elif "start" in user_message and "step" in user_message:
+            say(text=get_step(user_id, 1))
 
         elif "next" in user_message and "step" in user_message:
             say(text=get_step(user_id, 1))
@@ -106,9 +132,6 @@ def handle_dm_messages(event, say):
                     say(text=step_number + " does not exist.")
             else:
                 say(text="Please provide an AllRecipes URL first.")
-
-        elif "step" in user_message:
-            say(text=get_step(user_id, 1))
             
         elif "temperature" in user_message:
             if user_sessions.get(user_id, {}).get("last_action") == "recipe_selected":
