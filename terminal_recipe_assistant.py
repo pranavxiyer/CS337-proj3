@@ -1,4 +1,5 @@
 from directions import fetch_recipe_page
+from directions import get_temperature_api
 from datafetch import parse_recipe
 from parserhelper import find_ingredients_in_string
 from parserhelper import answer_cooking_question
@@ -6,7 +7,6 @@ import string
 import re
 
 user_session = {}
-
 def get_step(delta):
     if user_session.get("last_action") == "recipe_selected":
         user_session["current_step"] += delta
@@ -65,16 +65,13 @@ def main():
             else:
                 print("Please provide a valid AllRecipes URL first.")
 
-        elif "list" in user_message and "recipe steps" in user_message:
+        elif "list" in user_message and "steps" in user_message:
             if user_session.get("last_action") == "recipe_selected":
                 steps = user_session.get("steps", {})
                 for step, value in steps.items():
                     print(f"{step}: {value}")
             else:
                 print("Please provide a valid AllRecipes URL first.")
-
-        elif "recipe step" in user_message:
-            print(get_step(1))
 
         elif "next" in user_message and "step" in user_message:
             print(get_step(1))
@@ -86,7 +83,8 @@ def main():
             print(get_step(-1))
 
         elif " to step " in user_message:
-            step = int(user_message.split()[-1])
+            no_punctuation = user_message.translate(str.maketrans('', '', string.punctuation)).strip()
+            step = int(no_punctuation.split()[-1])
             if user_session.get("last_action") == "recipe_selected":
                 steps = user_session.get("steps", {})
                 step_number = f"Step {step}"
@@ -97,6 +95,16 @@ def main():
                     print(f"{step_number} does not exist.")
             else:
                 print("Please provide a valid AllRecipes URL first.")
+
+        elif "step" in user_message:
+            print(get_step(1))
+
+        elif "temperature" in user_message:
+            if user_session.get("last_action") == "recipe_selected":
+                current_step = user_session['steps'][f"Step {user_session['current_step']}"]
+                print(get_temperature_api(current_step))
+            else:
+                print("Please provide an AllRecipes URL first.")
 
         elif "how long do i" in user_message or "done" in user_message:
             if user_session.get("last_action") == "recipe_selected":

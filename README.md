@@ -55,7 +55,7 @@ Slack functionality is the same as the functionality in the terminal assistant, 
 - "How long do I..."
 - "When is it done?"
 - "How much <ingredient (as described in the step)> do I need?"
-- "What temperature?"
+- "What temperature should I...?"
 - "What can I use instead of <ingredient or tool>?"
 
 4. Simple "what is" questions
