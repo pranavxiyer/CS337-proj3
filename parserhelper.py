@@ -81,7 +81,6 @@ def answer_cooking_question(step_string, question):
 
 def extract_descriptor_and_preparation(ingredient):
     # Define lists of common descriptors and preparations
-    descriptors = ['fresh', 'extra-virgin', 'dried', 'canned', 'frozen', 'organic', 'whole', 'ground']
     preparations = ['divided', 'finely chopped', 'chopped', 'sliced', 'diced', 'minced', 'crushed', 'grated', 'shredded', 'peeled', 'cored', 'seeded']
 
     # Tokenize the ingredient string
@@ -96,12 +95,13 @@ def extract_descriptor_and_preparation(ingredient):
 
     # Iterate through the POS tags to find descriptors and preparations
     for word, tag in pos_tags:
-        if tag.startswith('JJ') and word in descriptors:  # Adjectives
+        if tag.startswith('JJ'):  # Adjectives
             descriptor = word
         elif tag.startswith('V') : #and any(prep.startswith(word) for prep in preparations):  # Verbs
             preparation = next((prep for prep in preparations if prep.startswith(word)), None)
 
     return descriptor, preparation
+
 
 
 
