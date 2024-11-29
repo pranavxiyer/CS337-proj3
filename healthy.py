@@ -85,22 +85,26 @@ def suggest_healthier_transformations(recipe):
 
     return suggestions
 
-# Example usage
-recipe = {
-    'Ingredients': [
-        {'name': 'unsalted butter', 'amount': 1, 'measurement': 'cup', 'descriptor': 'unsalted', 'preparation': 'melted'},
-        {'name': 'sugar', 'amount': 2, 'measurement': 'cups', 'descriptor': 'granulated', 'preparation': 'none'},
-        {'name': 'flour', 'amount': 3, 'measurement': 'cups', 'descriptor': 'all-purpose', 'preparation': 'sifted'}
-    ],
-    'Tools': ['pan', 'whisk'],
-    'Methods': [['sauté'], ['stir', 'mix']],
-    'Steps': [
-        'Melt the butter in a pan.',
-        'Add the sugar and stir until dissolved.',
-        'Gradually add the flour and mix well.'
-    ]
-}
 
-suggestions = suggest_healthier_transformations(recipe)
-for suggestion in suggestions:
-    print(suggestion)
+
+
+if __name__ == "__main__":
+    # Example usage
+    recipe = {
+        'Ingredients': [
+            {'name': 'butter', 'amount': 1, 'measurement': 'cup', 'descriptor': 'unsalted', 'preparation': 'melted'},
+            {'name': 'sugar', 'amount': 2, 'measurement': 'cups', 'descriptor': 'granulated', 'preparation': 'none'},
+            {'name': 'flour', 'amount': 3, 'measurement': 'cups', 'descriptor': 'all-purpose', 'preparation': 'sifted'}
+        ],
+        'Tools': ['pan', 'whisk'],
+        'Methods': [['sauté'], ['stir', 'mix']],
+        'Steps': [
+            'Melt the butter in a pan.',
+            'Add the sugar and stir until dissolved.',
+            'Gradually add the flour and mix well.'
+        ]
+    }
+
+    suggestions = suggest_healthier_transformations(recipe)
+    for suggestion in suggestions:
+        print(suggestion)

@@ -30,6 +30,21 @@ def get_ingredients(html_content):
                 ing["name"] = clean_text(spanner.text)
         # print(ing["name"])
         descriptor, preparation = extract_descriptor_and_preparation(ing["name"])
+
+        if not descriptor:
+            descriptor = ""
+        if not preparation:
+            preparation = ""
+
+        name = ing["name"]    
+
+        pattern = re.compile(r'\b' + re.escape(descriptor) + r'\b|\b' + re.escape(preparation) + r'\b', re.IGNORECASE)
+
+        cleaned_name = pattern.sub('', name).strip()
+
+        # Remove any trailing commas or extra spaces
+        ing["name"] = re.sub(r',\s*$', '', cleaned_name).strip()
+
         ing["descriptor"] = descriptor
         ing["preparation"] = preparation
         ingredients.append(ing)
