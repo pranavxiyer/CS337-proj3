@@ -19,14 +19,6 @@
 5. Run recipe asistant:
    `python terminal_recipe_assistant.py`
 
-# To use the Slack interface:
-
-Since we host the app locally (since we don't want to pay to host it somewhere), the app is not always up and running. We tried some options like Heroku and Render, but their free tier limits don't suffice due to how large the spacy model is, or they require payment method.
-
-To test in Slack, message cheryl@u.northwestern.edu to set up a time. We'll invite you to our workspace where the Slack app lives and run the app locally so that it can be interacted with. From the workspace, in the left bar, select Automations (play button), then select Project 2 Chatbot. Select the messages tab to begin a DM with the bot.
-
-Slack functionality is the same as the functionality in the terminal assistant, and is also displayed in the video.
-
 # Extra Features:
 
 1. Conversational interface through Slack
