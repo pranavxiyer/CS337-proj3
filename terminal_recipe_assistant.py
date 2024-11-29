@@ -3,7 +3,6 @@ from directions import get_temperature_api
 from datafetch import parse_recipe
 from parserhelper import find_ingredients_in_string
 from parserhelper import answer_cooking_question
-from dairyfree import transform_recipe_to_lactose_free
 import string
 import re
 
@@ -32,7 +31,7 @@ def main():
             url = user_message.strip('<>')
             print("Fetching recipe...")
             html_content = fetch_recipe_page(url)
-            parsed_recipe = transform_recipe_to_lactose_free(parse_recipe(html_content))
+            parsed_recipe = parse_recipe(html_content)
 
             user_session = {
                 "ingredients": parsed_recipe['ingredients'],
