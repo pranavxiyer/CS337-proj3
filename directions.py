@@ -7,9 +7,9 @@ from nltk.corpus import wordnet as wn
 from nltk.stem.wordnet import WordNetLemmatizer
 from rapidfuzz import fuzz
 import re
-nltk.download('verbnet')
-nltk.download('punkt_tab')
-nltk.download('averaged_perceptron_tagger_eng')
+# nltk.download('verbnet')
+# nltk.download('punkt_tab')
+# nltk.download('averaged_perceptron_tagger_eng')
 spacy_model = spacy.load("en_core_web_lg")
 cooking_class = verbnet.vnclass('cooking-45.3')
 method_verbs = [member.get("name") for member in cooking_class.findall("MEMBERS/MEMBER")]
