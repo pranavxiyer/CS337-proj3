@@ -3,7 +3,7 @@ from datafetch import parse_recipe
 import nltk
 import random
 
-meats = ["chicken", "fish", "lamb", "beef", "pancetta", "salmon"]
+meats = ["chicken", "fish", "lamb", "beef", "pancetta", "salmon", "pork"]
 meat_subs = ["vegetables", "tofu", "saitan", "tempeh", "beyond", "impossible"]
 meat_parts = ["thigh", "breast", "leg"]
 meat_liquids = ["broth", "stew", "stock"]
