@@ -21,9 +21,6 @@ def transform_recipe_to_lactose_free(parsed_recipe):
                 if ingredient['descriptor']:
                     descriptors[dairy] = ingredient['descriptor']
 
-    print(full_ingredient_name_transformations)
-    print(descriptors)
-
     # substitute steps
     for number, step in parsed_recipe['directions'].items():
         step = step.lower()
