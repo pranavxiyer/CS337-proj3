@@ -5,10 +5,13 @@ from dairyfree import transform_recipe_to_lactose_free
 from to_vegetarian import to_veg_transformation
 from to_nonvegetarian import to_veg_transformation
 from healthy import transform_recipe_healthiness
+from to_indian import to_indian
 import copy
 
-def write_recipe_to_txt(recipe_data, file_path):
+def write_recipe_to_txt(recipe_data, file_path, transformation):
     human_readable = []
+
+    human_readable.append(f"Transformation: {transformation}\n")
 
     human_readable.append("Ingredients:\n")
     for ingredient in recipe_data.get('ingredients', []):
@@ -51,41 +54,45 @@ def main():
 
     user_choice = input("\n> ").lower()
     if user_choice == "1":
-        write_recipe_to_txt(to_veg_transformation(copy.deepcopy(parsed_recipe)), "to_vegetarian_recipe_transformation.txt")
+        write_recipe_to_txt(to_veg_transformation(copy.deepcopy(parsed_recipe)), "to_vegetarian_recipe_transformation.txt", "to vegetarian")
         print("Transformed recipe written to to_vegetarian_recipe_transformation.txt")
-        write_recipe_to_txt(parsed_recipe, "original_recipe.txt")
-        print("Original recipe written to original_recipe.txt")
+        write_recipe_to_txt(parsed_recipe, "to_vegetarian_original_recipe.txt", "to vegetarian (before transformation)")
+        print("Original recipe written to to_vegetarian_original_recipe.txt")
     elif user_choice == "2":
-        write_recipe_to_txt(to_veg_transformation(copy.deepcopy(parsed_recipe)), "to_nonvegetarian_recipe_transformation.txt")
+        write_recipe_to_txt(to_veg_transformation(copy.deepcopy(parsed_recipe)), "to_nonvegetarian_recipe_transformation.txt", "to non-vegetarian")
         print("Transformed recipe written to to_nonvegetarian_recipe_transformation.txt")
-        write_recipe_to_txt(parsed_recipe, "original_recipe.txt")
-        print("Original recipe written to original_recipe.txt")
+        write_recipe_to_txt(parsed_recipe, "to_nonveetarian_original_recipe.txt", "to non-vegetarian (before transformation)")
+        print("Original recipe written to to_nonveetarian_original_recipe.txt")
     elif user_choice == "3":
-        write_recipe_to_txt(transform_recipe_healthiness(copy.deepcopy(parsed_recipe), "healthy"), "to_healthy_recipe_transformation.txt")
+        write_recipe_to_txt(transform_recipe_healthiness(copy.deepcopy(parsed_recipe), "healthy"), "to_healthy_recipe_transformation.txt", "to healthy")
         print("Transformed recipe written to to_healthy_recipe_transformation.txt")
-        write_recipe_to_txt(parsed_recipe, "original_recipe.txt")
-        print("Original recipe written to original_recipe.txt")
+        write_recipe_to_txt(parsed_recipe, "to_healthy_original_recipe.txt", "to healthy (before transformation)")
+        print("Original recipe written to to_healthy_original_recipe.txt")
     elif user_choice == "4":
-        write_recipe_to_txt(transform_recipe_healthiness(copy.deepcopy(parsed_recipe), "unhealthy"), "to_unhealthy_recipe_transformation.txt")
+        write_recipe_to_txt(transform_recipe_healthiness(copy.deepcopy(parsed_recipe), "unhealthy"), "to_unhealthy_recipe_transformation.txt", "to unhealthy")
         print("Transformed recipe written to to_unhealthy_recipe_transformation.txt")
-        write_recipe_to_txt(parsed_recipe, "original_recipe.txt")
-        print("Original recipe written to original_recipe.txt")
-    
+        write_recipe_to_txt(parsed_recipe, "to_unhealthy_original_recipe.txt", "to unhealthy (before transformation)")
+        print("Original recipe written to to_unhealthy_original_recipe.txt")
+    elif user_choice == "5":
+        write_recipe_to_txt(to_indian(copy.deepcopy(parsed_recipe)), "to_indian_recipe_transformation.txt", "to Indian style cuisine")
+        print("Transformed recipe written to to_indian_recipe_transformation.txt")
+        write_recipe_to_txt(parsed_recipe, "to_indian_original_recipe.txt", "to Indian style cuisine (before transformation)")
+        print("Original recipe written to to_indian_original_recipe.txt")
     elif user_choice == "6":
-        write_recipe_to_txt(multiply_ingredients(copy.deepcopy(parsed_recipe), 0.5), "half_recipe_amount_transformation.txt")
+        write_recipe_to_txt(multiply_ingredients(copy.deepcopy(parsed_recipe), 0.5), "half_recipe_amount_transformation.txt", "half recipe amount")
         print("Transformed recipe written to half_recipe_amount_transformation.txt")
-        write_recipe_to_txt(multiply_ingredients(copy.deepcopy(parsed_recipe), 1), "original_recipe.txt")
-        print("Original recipe written to original_recipe.txt")
+        write_recipe_to_txt(multiply_ingredients(copy.deepcopy(parsed_recipe), 1), "half_amount_original_recipe.txt", "half recipe amount (before transformation)")
+        print("Original recipe written to half_amount_original_recipe.txt")
     elif user_choice == "7":
-        write_recipe_to_txt(multiply_ingredients(copy.deepcopy(parsed_recipe), 2), "double_recipe_amount_transformation.txt")
+        write_recipe_to_txt(multiply_ingredients(copy.deepcopy(parsed_recipe), 2), "double_recipe_amount_transformation.txt", "double recipe amount")
         print("Transformed recipe written to double_recipe_amount_transformation.txt")
-        write_recipe_to_txt(multiply_ingredients(copy.deepcopy(parsed_recipe), 1), "original_recipe.txt")
-        print("Original recipe written to original_recipe.txt")
+        write_recipe_to_txt(multiply_ingredients(copy.deepcopy(parsed_recipe), 1), "double_amount_original_recipe.txt", "double recipe amount (before transformation)")
+        print("Original recipe written to double_amount_original_recipe.txt")
     elif user_choice == "8":
-        write_recipe_to_txt(transform_recipe_to_lactose_free(copy.deepcopy(parsed_recipe)), "lactose_free_recipe_transformation.txt")
+        write_recipe_to_txt(transform_recipe_to_lactose_free(copy.deepcopy(parsed_recipe)), "lactose_free_recipe_transformation.txt", "to lactose free")
         print("Transformed recipe written to lactose_free_recipe_transformation.txt")
-        write_recipe_to_txt(parsed_recipe, "original_recipe.txt")
-        print("Original recipe written to original_recipe.txt")
+        write_recipe_to_txt(parsed_recipe, "to_lactose_free_original_recipe.txt", "to lactose free (before transformation)")
+        print("Original recipe written to to_lactose_free_original_recipe.txt")
         
 
 

@@ -9,10 +9,10 @@ change_to_indian = {"garlic": "turmeric", "thyme": "ajwain", "rosemary": "elaich
 
 def to_indian(recipe_dict):
     # TRANSFORM INGREDIENTS
-    ingredients = parsed_dict["ingredients"]
-    tools = parsed_dict["tools"]
-    methods = parsed_dict["methods"]
-    steps = parsed_dict["directions"]
+    ingredients = recipe_dict["ingredients"]
+    tools = recipe_dict["tools"]
+    methods = recipe_dict["methods"]
+    steps = recipe_dict["directions"]
 
     
     indian_dict = {}
