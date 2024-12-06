@@ -54,15 +54,15 @@ def get_ingredients(html_content):
 
 def parse_recipe(html_content):
     ingredients = get_ingredients(html_content)
-    # directions = get_directions(html_content)
-    # tools = extract_tools(list(directions.values()))
-    # methods = get_methods_spacy(directions)
-    # print(list(directions.values()))
+    directions = get_directions(html_content)
+    tools = extract_tools(list(directions.values()))
+    methods = get_methods_spacy(directions)
+    print(list(directions.values()))
     return {
         'ingredients': ingredients,
-        # 'directions': directions,
-        # 'tools': tools,
-        # 'methods': methods
+        'directions': directions,
+        'tools': tools,
+        'methods': methods
     }
 
 
