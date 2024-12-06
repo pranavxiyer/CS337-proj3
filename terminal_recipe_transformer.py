@@ -54,16 +54,20 @@ def main():
 
     # demo
     # https://www.allrecipes.com/chicken-carbonara-pasta-bake-recipe-7969899
-    # (1), (3), (8)
+    # (1) veg, (3) healthy, (8) lactose free
+    # pranav, keene, cheryl
 
     # https://www.allrecipes.com/recipe/8890/general-tsaos-chicken/
-    # (3), (4), (7)
+    # (3) healthy, (4) unhealthy, (7) double
+    # keene, keene, cheryl
 
     # https://www.allrecipes.com/recipe/240559/traditional-gyros/
-    # (5), (6), (1)
+    # (5) indian, (1) veg, (6) half
+    # pranav, pranav, cheryl
 
     # https://www.allrecipes.com/green-bean-mac-and-cheese-recipe-8753390
-    # (2)
+    # (2) non veg
+    # pranav
 
     user_choice = input("\n> ").lower()
     if user_choice == "1":
