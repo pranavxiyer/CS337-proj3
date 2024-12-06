@@ -5,7 +5,7 @@ import random
 
 change_to_indian = {"garlic": "turmeric", "thyme": "ajwain", "rosemary": "elaichi", "oregano": "coriander", "feta": "paneer",
                     "lamb": "chickpea", "beef": "chicken", "pork": "chicken", "soy sauce": "tamarind sauce", 
-                    "tzatziki": "raita", "meat": "indian style"}
+                    "tzatziki": "raita", "meat": "indian style", "pita bread": "naan"}
 
 def to_indian(recipe_dict):
     # TRANSFORM INGREDIENTS
