@@ -1,7 +1,7 @@
 import spacy
 from nltk.corpus import wordnet
 import nltk
-
+from rapidfuzz import fuzz
 # nltk.download('wordnet')
 # nltk.download('omw-1.4')
 
@@ -20,7 +20,8 @@ def replacementIngredients(conversion = 'unhealthy'):
             'greek yogurt': 'full-fat sour cream',
             'chicken breast': 'bacon-wrapped sausages',
             'berries': 'fruit gummies',
-            'avocado': 'm`ayonnaise',
+            'avocado': 'mayonnaise',
+            'broth': 'bouillon cubes',
             'stock': 'bouillon cubes',
             'turkey sausage': 'sausage',
             'almond milk': 'milk',
@@ -33,6 +34,7 @@ def replacementIngredients(conversion = 'unhealthy'):
             'butter': 'olive oil',
             'flour': 'whole wheat flour',
             'cream': 'low-fat yogurt',
+            'monosodium glutamate': ['shiitake mushrooms',  'powdered', None],
             'MSG': ['shiitake mushrooms',  'powdered', None],
             'mayonnaise': 'greek yogurt',
             'beef': 'chicken',
@@ -50,8 +52,8 @@ def replacementMethods(conversion = 'unhealthy'):
         }
     else:
         return {
-            'pan fry': 'bake',
-            'deep-fry': 'air-fry',
+            'deep': 'air',
+            'stir-fry': 'sauté',
             'boil': 'steam'
         }
 
@@ -61,7 +63,7 @@ def get_ingredient_alternative(ingredient, transform):
     ingr = ingredient['name'].lower()
 
     for original, replacement in replacementIngredients(transform).items():
-        if original in ingr:
+        if fuzz.token_set_ratio(original, ingr) > 90:
             if type(replacement) == list:
                 ingredient['name'] = replacement[0]
                 ingredient['descriptor'] = replacement[1]
@@ -82,15 +84,20 @@ def get_ingredient_alternative(ingredient, transform):
 
     return ingredient
 
+def formatIngRepl(ingr):
+    if isinstance(ingr, list):
+        if len(ingr) > 1:
+            return f"{ingr[1]} {ingr[0]}"
+        return ingr[0]
+    return ingr
+
+
 
 def transform_recipe_healthiness(recipe, transform):
     
     for ingredient in recipe['ingredients']:
         ingredient = get_ingredient_alternative(ingredient, transform)
-        # name = ingredient['name']
-        # healthier_name = get_healthier_alternative(name)
-        # if healthier_name != name:
-        #     ingredient['name'] = healthier_name
+        
 
     methods = list(recipe['methods'])
     primary_methods = list(methods[0])
@@ -99,24 +106,28 @@ def transform_recipe_healthiness(recipe, transform):
     replacement_methods = replacementMethods(transform)
 
     for i, method in enumerate(primary_methods):
-        if method.lower() in replacement_methods:
-            primary_methods[i] = replacement_methods[method.lower()]
+        for replacement in replacement_methods:
+            if fuzz.token_set_ratio(replacement, method) > 90:
+                secondary_methods[i] = replacement_methods[replacement]
 
     for i, method in enumerate(secondary_methods):
-        if method.lower() in replacement_methods:
-            secondary_methods[i] = replacement_methods[method.lower()]
+        for replacement in replacement_methods:
+            if fuzz.token_set_ratio(replacement, method) > 90:
+                secondary_methods[i] = replacement_methods[replacement]
 
     recipe['methods'] = [set(primary_methods), set(secondary_methods)]
 
     for iter, step in recipe['directions'].items():
         doc = nlp(step)
         for token in doc:
-            if token.lemma_ in replacement_methods:
-                step = step.replace(token.text, replacement_methods[token.lemma_])
+            if method in replacement_methods:
+                if (token.lemma_, method) > 90:
+                    step = step.replace(token.text, replacement_methods[method])
             replIngs = replacementIngredients(transform)
-            if token.lemma_ in replIngs:
-                # print("_______________" + replIngs[token.lemma_])
-                step = step.replace(token.text, replIngs[token.lemma_])
+            for repling in replIngs:
+                if fuzz.token_set_ratio(token.lemma_, repling) > 90:
+                    # print("_______________" + replIngs[token.lemma_])
+                    step = step.replace(token.text, formatIngRepl(replIngs[repling]))
         #         print(step)
         # print(step)
         recipe['directions'][iter] = step
