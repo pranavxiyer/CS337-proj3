@@ -106,8 +106,8 @@ def main():
         write_recipe_to_txt(multiply_ingredients(copy.deepcopy(parsed_recipe), 1), "double_amount_original_recipe.txt", "double recipe amount (before transformation)")
         print("Original recipe written to double_amount_original_recipe.txt")
     elif user_choice == "8":
-        write_recipe_to_txt(transform_recipe_to_lactose_free(copy.deepcopy(parsed_recipe)), "lactose_free_recipe_transformation.txt", "to lactose free")
-        print("Transformed recipe written to lactose_free_recipe_transformation.txt")
+        write_recipe_to_txt(transform_recipe_to_lactose_free(copy.deepcopy(parsed_recipe)), "to_lactose_free_recipe_transformation.txt", "to lactose free")
+        print("Transformed recipe written to to_lactose_free_recipe_transformation.txt")
         write_recipe_to_txt(parsed_recipe, "to_lactose_free_original_recipe.txt", "to lactose free (before transformation)")
         print("Original recipe written to to_lactose_free_original_recipe.txt")
         
