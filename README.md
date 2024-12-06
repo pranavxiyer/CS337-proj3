@@ -1,4 +1,4 @@
-# Github link: https://github.com/pranavxiyer/CS337-proj3
+# Github link: (https://github.com/pranavxiyer/CS337-proj3)[https://github.com/pranavxiyer/CS337-proj3]
 
 # Instructions to run in terminal:
 
