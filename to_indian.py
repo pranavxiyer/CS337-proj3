@@ -5,7 +5,7 @@ import random
 
 change_to_indian = {"garlic": "turmeric", "thyme": "ajwain", "rosemary": "elaichi", "oregano": "coriander", "feta": "paneer",
                     "lamb": "chickpea", "beef": "chicken", "pork": "chicken", "soy sauce": "tamarind sauce", 
-                    "tzatziki": "raita", "meat": "indian style", "pita bread": "naan"}
+                    "tzatziki": "raita", "meat": "indian style", "bread": ["naan", ""], "pita": ""}
 
 def to_indian(recipe_dict):
     # TRANSFORM INGREDIENTS
@@ -32,7 +32,11 @@ def to_indian(recipe_dict):
             if to_change in ingredient:
                 # replace
                 sub_choice = change_to_indian[to_change]
-                indian_ingredient = sub_choice
+                if isinstance(sub_choice, list):
+                    descriptor = sub_choice[1]
+                    indian_ingredient = sub_choice[0]
+                else:
+                    indian_ingredient = sub_choice
                     
         
         indian_ing["amount"] = amount
@@ -77,7 +81,10 @@ def to_indian(recipe_dict):
 def convert_phrase_indian(phrase, transformer_dict):
     for to_change in transformer_dict:
         if to_change in phrase:
-            phrase = phrase.replace(to_change, transformer_dict[to_change])
+            if isinstance(transformer_dict[to_change], list):
+                phrase = phrase.replace(to_change, transformer_dict[to_change][0])
+            else:
+                phrase = phrase.replace(to_change, transformer_dict[to_change])
     return phrase
 
 if __name__ == "__main__":
