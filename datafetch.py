@@ -17,37 +17,38 @@ def get_ingredients(html_content):
     def has_options_class(tag):
         return tag.name == 'ul' and 'ingredients' in tag.get('class', [])
 
-    ingListText = soup.find(name='ul', class_=re.compile('ingredients'))
+    ingLists = soup.find_all(name='ul', class_=re.compile('ingredients'))
     
-    for text in ingListText.find_all('p'):
-        ing = {}
-        for spanner in text.find_all('span'):
-            if spanner.has_attr("data-ingredient-quantity"):
-                ing["amount"] = clean_text(spanner.text)
-            elif spanner.has_attr("data-ingredient-unit"):
-                ing["unit"] = clean_text(spanner.text)
-            elif spanner.has_attr("data-ingredient-name"):
-                ing["name"] = clean_text(spanner.text)
-        # print(ing["name"])
-        descriptor, preparation = extract_descriptor_and_preparation(ing["name"])
+    for ingListText in ingLists:
+        for text in ingListText.find_all('p'):
+            ing = {}
+            for spanner in text.find_all('span'):
+                if spanner.has_attr("data-ingredient-quantity"):
+                    ing["amount"] = clean_text(spanner.text)
+                elif spanner.has_attr("data-ingredient-unit"):
+                    ing["unit"] = clean_text(spanner.text)
+                elif spanner.has_attr("data-ingredient-name"):
+                    ing["name"] = clean_text(spanner.text)
+            # print(ing["name"])
+            descriptor, preparation = extract_descriptor_and_preparation(ing["name"])
 
-        if not descriptor:
-            descriptor = ""
-        if not preparation:
-            preparation = ""
+            if not descriptor:
+                descriptor = ""
+            if not preparation:
+                preparation = ""
 
-        name = ing["name"]    
+            name = ing["name"]    
 
-        pattern = re.compile(r'\b' + re.escape(descriptor) + r'\b|\b' + re.escape(preparation) + r'\b', re.IGNORECASE)
+            pattern = re.compile(r'\b' + re.escape(descriptor) + r'\b|\b' + re.escape(preparation) + r'\b', re.IGNORECASE)
 
-        cleaned_name = pattern.sub('', name).strip()
+            cleaned_name = pattern.sub('', name).strip()
 
-        # Remove any trailing commas or extra spaces
-        ing["name"] = re.sub(r',\s*$', '', cleaned_name).strip()
+            # Remove any trailing commas or extra spaces
+            ing["name"] = re.sub(r',\s*$', '', cleaned_name).strip()
 
-        ing["descriptor"] = descriptor
-        ing["preparation"] = preparation
-        ingredients.append(ing)
+            ing["descriptor"] = descriptor
+            ing["preparation"] = preparation
+            ingredients.append(ing)
 
     return ingredients
 
@@ -56,7 +57,7 @@ def parse_recipe(html_content):
     directions = get_directions(html_content)
     tools = extract_tools(list(directions.values()))
     methods = get_methods_spacy(directions)
-    # print(list(directions.values()))
+    print(list(directions.values()))
     return {
         'ingredients': ingredients,
         'directions': directions,
@@ -68,7 +69,7 @@ def parse_recipe(html_content):
 if __name__ == "__main__":
 
     # Example usage
-    url = "https://www.allrecipes.com/recipe/7011/chinese-steamed-buns/"
+    url = "https://www.allrecipes.com/recipe/72114/chicken-souvlaki-gyro-style/"
     # url = "https://www.seriouseats.com/baked-french-toast-casserole-recipe-8740716"
     html_content = fetch_recipe_page(url)
 
