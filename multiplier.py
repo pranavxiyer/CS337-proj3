@@ -17,7 +17,6 @@ def multiply_ingredients(parsed_recipe, multiplier):
             units.append(ingredient['unit'])
 
     pattern = re.compile(r'(\d+\s\d+/\d+|\d+/\d+|\d+(\.\d+)?)\s*(' + '|'.join(units) + r')')
-    print(units)
 
     for step, text in parsed_recipe['directions'].items():
         def double_match(match):
