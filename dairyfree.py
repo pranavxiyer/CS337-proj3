@@ -20,6 +20,7 @@ def transform_recipe_to_lactose_free(parsed_recipe):
                 full_ingredient_name_transformations[ingredient_name] = sub
                 if ingredient['descriptor']:
                     descriptors[dairy] = ingredient['descriptor']
+                    ingredient['descriptor'] = ''
 
     # substitute steps
     for number, step in parsed_recipe['directions'].items():
