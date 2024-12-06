@@ -80,6 +80,12 @@ def choose_replacement(meats):
     substitute = random.choice(meats)
     return substitute
 
+def to_veg_transformation(parsed_dict):
+    ingredients = parsed_dict["ingredients"]
+    tools = parsed_dict["tools"]
+    methods = parsed_dict["methods"]
+    steps = parsed_dict["directions"]
+    return to_nonvegetarian(ingredients, tools, methods, steps)
 
 if __name__ == "__main__":
     recipe_url = "https://www.allrecipes.com/green-bean-mac-and-cheese-recipe-8753390"

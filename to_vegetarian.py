@@ -102,8 +102,8 @@ def convert_phrase_vegetarian(phrase, transformer_dict):
     for part in meat_parts:
         if part in phrase:
             plural_part = part + "s"
-            phrase.replace(part, "")
             phrase.replace(plural_part, "")
+            phrase.replace(part, "")
     return phrase
 
 def choose_replacement(meat, choices):
@@ -116,7 +116,12 @@ def choose_replacement(meat, choices):
         return substitute
 
     
-
+def to_veg_transformation(parsed_dict):
+    ingredients = parsed_dict["ingredients"]
+    tools = parsed_dict["tools"]
+    methods = parsed_dict["methods"]
+    steps = parsed_dict["directions"]
+    return to_vegetarian(ingredients, tools, methods, steps)
 
 if __name__ == "__main__":
     recipe_url = "https://www.allrecipes.com/chicken-carbonara-pasta-bake-recipe-7969899"
