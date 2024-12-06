@@ -1,3 +1,5 @@
+# Github link: https://github.com/pranavxiyer/CS337-proj3
+
 # Instructions to run in terminal:
 
 1. Download project files.
@@ -19,4 +21,4 @@
 5. Run recipe asistant:
    `python terminal_recipe_transformer.py`
 
-When prompted, enter the AllRecipes URL. Then, select the transformation by entering the number corresponding to the transformation.
+When prompted, enter the AllRecipes URL. Then, select the transformation by entering the number corresponding to the transformation. The terminal will show the names of the .txt files that are exported, and they will appear in the root directory.
