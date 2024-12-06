@@ -5,7 +5,7 @@ import nltk
 # nltk.download('wordnet')
 # nltk.download('omw-1.4')
 
-nlp = spacy.load('en_core_web_sm')
+nlp = spacy.load('en_core_web_lg')
 
 
 
@@ -14,10 +14,13 @@ def replacementIngredients(conversion = 'unhealthy'):
         return {
             'honey': 'sugar',
             'olive oil': 'canola oil',
-            'whole wheat flour': 'white flour',
+            'whole wheat flour': 'white bleached flour',
             'salt': 'msg',
             'low-fat yogurt': 'cream',
-            'greek yogurt': 'mayonnaise',
+            'greek yogurt': 'full-fat sour cream',
+            'chicken breast': 'bacon-wrapped sausages',
+            'berries': 'fruit gummies',
+            'avocado': 'm`ayonnaise',
             'stock': 'bouillon cubes',
             'turkey sausage': 'sausage',
             'almond milk': 'milk',
