@@ -102,8 +102,8 @@ def convert_phrase_vegetarian(phrase, transformer_dict):
     for part in meat_parts:
         if part in phrase:
             plural_part = part + "s"
-            phrase.replace(part, "")
             phrase.replace(plural_part, "")
+            phrase.replace(part, "")
     return phrase
 
 def choose_replacement(meat, choices):
