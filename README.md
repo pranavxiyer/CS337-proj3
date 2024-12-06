@@ -1,5 +1,7 @@
 # Github link: [https://github.com/pranavxiyer/CS337-proj3](https://github.com/pranavxiyer/CS337-proj3)
 
+# Demo video: demo.mov
+
 # Instructions to run in terminal:
 
 1. Download project files.
