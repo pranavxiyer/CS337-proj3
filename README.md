@@ -17,6 +17,6 @@
 4. Download the SpaCy models:
    `python -m spacy download en_core_web_lg`
 5. Run recipe asistant:
-   `python terminal_recipe_transformer.py.py`
+   `python terminal_recipe_transformer.py`
 
 When prompted, enter the AllRecipes URL. Then, select the transformation by entering the number corresponding to the transformation.

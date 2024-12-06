@@ -43,14 +43,27 @@ def main():
 
     print("Recipe loaded! ")
     print("Select the transformation you would like to do on this recipe:")
-    print("(1) to vegetarian")
+    print("(1) to vegetarian") 
     print("(2) to non-vegetarian")
     print("(3) to healthy")
     print("(4) to unhealthy")
     print("(5) to Indian-style cuisine")
     print("(6) half recipe amount")
     print("(7) double recipe amount")
-    print("(8) to lactose free")
+    print("(8) to lactose free") 
+
+    # demo
+    # https://www.allrecipes.com/chicken-carbonara-pasta-bake-recipe-7969899
+    # (1), (3), (8)
+
+    # https://www.allrecipes.com/recipe/8890/general-tsaos-chicken/
+    # (3), (4), (7)
+
+    # https://www.allrecipes.com/recipe/240559/traditional-gyros/
+    # (5), (6), (1)
+
+    # https://www.allrecipes.com/green-bean-mac-and-cheese-recipe-8753390
+    # (2)
 
     user_choice = input("\n> ").lower()
     if user_choice == "1":

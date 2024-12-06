@@ -1,6 +1,7 @@
 /.venv
 /venv
 /testvenv
+/myvenv
 .env
 *.pyc
 ingr
