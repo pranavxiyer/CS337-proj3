@@ -3,7 +3,7 @@ from datafetch import parse_recipe
 from multiplier import multiply_ingredients
 from dairyfree import transform_recipe_to_lactose_free
 from to_vegetarian import to_veg_transformation
-from to_nonvegetarian import to_veg_transformation
+from to_nonvegetarian import to_nonveg_transformation
 from healthy import transform_recipe_healthiness
 from to_indian import to_indian
 import copy
@@ -76,7 +76,7 @@ def main():
         write_recipe_to_txt(parsed_recipe, "to_vegetarian_original_recipe.txt", "to vegetarian (before transformation)")
         print("Original recipe written to to_vegetarian_original_recipe.txt")
     elif user_choice == "2":
-        write_recipe_to_txt(to_veg_transformation(copy.deepcopy(parsed_recipe)), "to_nonvegetarian_recipe_transformation.txt", "to non-vegetarian")
+        write_recipe_to_txt(to_nonveg_transformation(copy.deepcopy(parsed_recipe)), "to_nonvegetarian_recipe_transformation.txt", "to non-vegetarian")
         print("Transformed recipe written to to_nonvegetarian_recipe_transformation.txt")
         write_recipe_to_txt(parsed_recipe, "to_nonvegetarian_original_recipe.txt", "to non-vegetarian (before transformation)")
         print("Original recipe written to to_nonvegetarian_original_recipe.txt")
