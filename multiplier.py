@@ -13,7 +13,8 @@ def multiply_ingredients(parsed_recipe, multiplier):
 
     for ingredient in parsed_recipe['ingredients']:
         ingredient['amount'] = multiplier * to_decimal(ingredient['amount'])
-        units.append(ingredient['unit'])
+        if ingredient['unit']:
+            units.append(ingredient['unit'])
 
     pattern = re.compile(r'(\d+\s\d+/\d+|\d+/\d+|\d+(\.\d+)?)\s*(' + '|'.join(units) + r')')
 

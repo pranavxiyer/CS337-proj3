@@ -80,7 +80,7 @@ def choose_replacement(meats):
     substitute = random.choice(meats)
     return substitute
 
-def to_veg_transformation(parsed_dict):
+def to_nonveg_transformation(parsed_dict):
     ingredients = parsed_dict["ingredients"]
     tools = parsed_dict["tools"]
     methods = parsed_dict["methods"]
