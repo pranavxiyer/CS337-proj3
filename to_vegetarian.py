@@ -13,6 +13,7 @@ def to_vegetarian(ingredients, tools, methods, steps):
     choices = meat_subs[:]
     veg_dict = {}
     transformer_dict = {}
+    transformer_dict["meat"] = "vegetarian style"
     veg_ingredients = []
     for ing in ingredients:
         veg_ing = {}
